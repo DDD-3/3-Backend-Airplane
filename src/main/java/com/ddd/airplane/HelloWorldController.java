@@ -13,6 +13,6 @@ public class HelloWorldController {
     @GetMapping("/")
     public String hello() throws UnknownHostException {
         String address = getLocalHost().getHostAddress();
-        return MessageFormat.format("{0} : Hello, World.", address);
+        return MessageFormat.format("{0} : Hello, World!", address);
     }
 }
