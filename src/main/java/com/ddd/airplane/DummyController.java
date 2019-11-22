@@ -1,5 +1,6 @@
 package com.ddd.airplane;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,17 +13,19 @@ import java.util.stream.Collectors;
 
 import static java.net.InetAddress.getLocalHost;
 
+@Slf4j
 @RestController
 public class DummyController {
     private final JdbcTemplate jdbcTemplate;
 
     @Value("${spring.datasource.url}")
-    private String dbUrl;
+    private String datasourceUrl;
 
     @GetMapping("/")
     public String index() throws UnknownHostException {
+        log.info("datasourceUrl : {}", datasourceUrl);
         String address = getLocalHost().getHostAddress();
-        return MessageFormat.format("{0} : Hello, World!", dbUrl);
+        return MessageFormat.format("{0} : Hello, World!", address);
     }
 
     @GetMapping("/v1/dummies")
