@@ -1,22 +1,18 @@
-package com.ddd.airplane;
+package com.ddd.airplane.index;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.UnknownHostException;
 import java.text.MessageFormat;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.net.InetAddress.getLocalHost;
 
 @Slf4j
 @RestController
-public class DummyController {
-    private final JdbcTemplate jdbcTemplate;
+public class IndexController {
 
     @Value("${spring.datasource.url}")
     private String datasourceUrl;
@@ -26,16 +22,5 @@ public class DummyController {
         log.info("datasourceUrl : {}", datasourceUrl);
         String address = getLocalHost().getHostAddress();
         return MessageFormat.format("{0} : Hello, World!", address);
-    }
-
-    @GetMapping("/v1/dummies")
-    public List<String> getDummies() {
-        return this.jdbcTemplate.queryForList("SELECT 1 FROM dual").stream()
-                .map(m -> m.values().toString())
-                .collect(Collectors.toList());
-    }
-
-    public DummyController(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
     }
 }
