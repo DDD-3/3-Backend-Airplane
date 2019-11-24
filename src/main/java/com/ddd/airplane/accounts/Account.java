@@ -9,5 +9,7 @@ class Account {
     private String email;
     @JsonIgnore
     private String password;
+    @JsonIgnore
+    private boolean enabled;
     private String nickname;
 }

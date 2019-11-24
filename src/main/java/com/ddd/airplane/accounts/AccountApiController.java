@@ -10,9 +10,9 @@ import javax.validation.Valid;
 public class AccountApiController {
     private final AccountService accountService;
 
-    @PostMapping("/v1/accounts")
+    @PostMapping("/v1/signUp")
     @ResponseStatus(HttpStatus.CREATED)
-    public Account createAccount(@RequestBody @Valid AccountDto accountDto) {
+    public Account signUp(@RequestBody @Valid AccountDto accountDto) {
         return accountService.createAccount(accountDto);
     }
 

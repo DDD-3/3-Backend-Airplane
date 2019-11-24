@@ -11,10 +11,12 @@ public class AccountRepository {
     Account findByEmail(String email) {
         try {
             return jdbcTemplate.queryForObject(
-                    "SELECT email, nickname FROM accounts WHERE email = ?",
+                    AccountSql.FIND_BY_EMAIL,
                     new Object[]{email},
                     (rs, rowNum) -> Account.builder()
                             .email(rs.getString("email"))
+                            .password(rs.getString("password"))
+                            .enabled(rs.getBoolean("enabled"))
                             .nickname(rs.getString("nickname"))
                             .build()
             );
@@ -25,7 +27,7 @@ public class AccountRepository {
 
     Account save(Account account) {
         jdbcTemplate.update(
-                "INSERT INTO accounts (email, password, nickname) VALUES (?, ?, ?)",
+                AccountSql.SAVE,
                 account.getEmail(),
                 account.getPassword(),
                 account.getNickname()

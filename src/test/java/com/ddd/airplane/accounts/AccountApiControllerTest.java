@@ -18,7 +18,7 @@ class AccountApiControllerTest extends BaseControllerTest {
     private AccountRepository accountRepository;
 
     @Test
-    void createAccount() throws Exception {
+    void signUp() throws Exception {
         AccountDto accountDto = AccountDto.builder()
                 .email("y2o2u2n@gmail.com")
                 .password("password")
@@ -26,7 +26,7 @@ class AccountApiControllerTest extends BaseControllerTest {
                 .build();
 
         mockMvc.perform(
-                post("/api/v1/accounts")
+                post("/api/v1/signUp")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(accountDto))
         )
@@ -38,7 +38,7 @@ class AccountApiControllerTest extends BaseControllerTest {
     }
 
     @Test
-    void createAccount_409() throws Exception {
+    void signUp_409() throws Exception {
         // Given
         Account registered = generateAccount(409);
 
@@ -50,7 +50,7 @@ class AccountApiControllerTest extends BaseControllerTest {
                 .build();
 
         mockMvc.perform(
-                post("/api/v1/accounts")
+                post("/api/v1/signUp")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(newAccountDto))
         )
