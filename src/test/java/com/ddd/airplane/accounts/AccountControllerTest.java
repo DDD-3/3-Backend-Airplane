@@ -26,7 +26,7 @@ class AccountControllerTest extends BaseControllerTest {
                 .build();
 
         mockMvc.perform(
-                post("/v1/accounts")
+                post("/api/v1/accounts")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(accountDto))
         )
@@ -50,7 +50,7 @@ class AccountControllerTest extends BaseControllerTest {
                 .build();
 
         mockMvc.perform(
-                post("/v1/accounts")
+                post("/api/v1/accounts")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(newAccountDto))
         )
@@ -64,7 +64,7 @@ class AccountControllerTest extends BaseControllerTest {
         Account account = generateAccount(100);
 
         // When &  Then
-        mockMvc.perform(get("/v1/accounts/{email}", account.getEmail()))
+        mockMvc.perform(get("/api/v1/accounts/{email}", account.getEmail()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("email").value(account.getEmail()))
@@ -78,7 +78,7 @@ class AccountControllerTest extends BaseControllerTest {
         String unknownEmail = "unknown@email.com";
 
         // When & Then
-        this.mockMvc.perform(get("/v1/accounts/{email}", unknownEmail))
+        this.mockMvc.perform(get("/api/v1/accounts/{email}", unknownEmail))
                 .andDo(print())
                 .andExpect(status().isNotFound());
     }
