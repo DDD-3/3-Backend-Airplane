@@ -7,7 +7,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api")
-public class AccountController {
+public class AccountApiController {
     private final AccountService accountService;
 
     @PostMapping("/v1/accounts")
@@ -22,7 +22,7 @@ public class AccountController {
         return accountService.getAccount(email);
     }
 
-    public AccountController(AccountService accountService) {
+    public AccountApiController(AccountService accountService) {
         this.accountService = accountService;
     }
 }
