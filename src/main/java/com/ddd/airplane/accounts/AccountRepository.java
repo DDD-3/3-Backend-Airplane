@@ -1,9 +1,13 @@
 package com.ddd.airplane.accounts;
 
+import lombok.AllArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.Set;
+
+@AllArgsConstructor
 @Repository
 public class AccountRepository {
     private final JdbcTemplate jdbcTemplate;
@@ -16,8 +20,8 @@ public class AccountRepository {
                     (rs, rowNum) -> Account.builder()
                             .email(rs.getString("email"))
                             .password(rs.getString("password"))
-                            .enabled(rs.getBoolean("enabled"))
                             .nickname(rs.getString("nickname"))
+                            .roles(Set.of(AccountRole.ROLE_USER))
                             .build()
             );
         } catch (EmptyResultDataAccessException e) {
@@ -39,7 +43,9 @@ public class AccountRepository {
                 .build();
     }
 
-    public AccountRepository(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    void truncate() {
+        jdbcTemplate.update(
+                AccountSql.TRUNCATE
+        );
     }
 }
