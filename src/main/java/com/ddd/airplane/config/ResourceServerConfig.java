@@ -18,7 +18,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                     .and()
                 .authorizeRequests()
                     .mvcMatchers(HttpMethod.POST, "/api/v1/accounts")
-                        .anonymous()
+                        .permitAll()
                     .mvcMatchers("/api/**")
                         .authenticated()
                     .and()
