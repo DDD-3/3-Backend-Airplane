@@ -3,6 +3,7 @@ steps:
     id: Install
     args:
       - 'install'
+      - '-P${_PROFILE}'
   - name: 'gcr.io/cloud-builders/docker'
     id: Build
     args:
