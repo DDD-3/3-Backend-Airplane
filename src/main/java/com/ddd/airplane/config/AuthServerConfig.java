@@ -13,15 +13,17 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 
+import javax.sql.DataSource;
+
 @AllArgsConstructor
 @Configuration
 @EnableAuthorizationServer
 public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
     private final PasswordEncoder passwordEncoder;
-    private final AppProperties appProperties;
     private final AuthenticationManager authenticationManager;
     private final AccountService accountService;
     private final TokenStore tokenStore;
+    private final DataSource dataSource;
 
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) {
@@ -31,13 +33,8 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients
-                .inMemory()
-                .withClient(appProperties.getClientId())
-                .authorizedGrantTypes("password", "refresh_token")
-                .scopes("read", "write")
-                .secret(passwordEncoder.encode(appProperties.getClientSecret()))
-                .accessTokenValiditySeconds(10 * 60)
-                .refreshTokenValiditySeconds(6 * 10 * 60);
+                .jdbc(dataSource)
+                .build();
     }
 
     @Override

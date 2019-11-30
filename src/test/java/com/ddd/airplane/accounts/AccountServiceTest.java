@@ -1,6 +1,7 @@
 package com.ddd.airplane.accounts;
 
 import com.ddd.airplane.common.BaseServiceTest;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,6 +15,11 @@ public class AccountServiceTest extends BaseServiceTest {
     private AccountService accountService;
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Before
+    public void setUp() {
+        accountService.deleteAll();;
+    }
 
     @Test
     public void loadUserByUsername() {
