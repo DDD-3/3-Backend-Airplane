@@ -26,3 +26,16 @@ VALUES
     '{}',
     ''
  );
+
+INSERT INTO `accounts`
+(
+    `email`,
+    `password`,
+    `nickname`
+)
+VALUES
+(
+    'sample@gmail.com',
+    '$2a$10$X8NVtwr3rRjoVcUceK4UweEjHxlyr04YOLNZPDPENydUYQtbVgez.',
+    'airplane'
+);
