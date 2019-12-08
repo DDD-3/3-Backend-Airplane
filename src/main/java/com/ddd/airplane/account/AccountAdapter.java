@@ -1,4 +1,4 @@
-package com.ddd.airplane.accounts;
+package com.ddd.airplane.account;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;

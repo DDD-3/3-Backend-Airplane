@@ -1,7 +1,6 @@
 package com.ddd.airplane.config;
 
-import com.ddd.airplane.accounts.AccountService;
-import com.ddd.airplane.common.AppProperties;
+import com.ddd.airplane.account.AccountService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

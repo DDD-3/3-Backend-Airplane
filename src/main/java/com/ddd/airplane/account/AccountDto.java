@@ -1,4 +1,4 @@
-package com.ddd.airplane.accounts;
+package com.ddd.airplane.account;
 
 import lombok.Builder;
 import lombok.Data;

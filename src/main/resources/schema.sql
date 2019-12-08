@@ -1,5 +1,5 @@
-DROP TABLE IF EXISTS `accounts`;
-CREATE TABLE `accounts`
+DROP TABLE IF EXISTS `account`;
+CREATE TABLE `account`
 (
     `email`    varchar(64)  NOT NULL,
     `password` varchar(128) NOT NULL,

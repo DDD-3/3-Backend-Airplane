@@ -1,4 +1,4 @@
-package com.ddd.airplane.accounts;
+package com.ddd.airplane.account;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;

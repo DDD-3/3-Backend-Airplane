@@ -1,8 +1,8 @@
 package com.ddd.airplane.common;
 
-import com.ddd.airplane.accounts.Account;
-import com.ddd.airplane.accounts.AccountDto;
-import com.ddd.airplane.accounts.AccountService;
+import com.ddd.airplane.account.Account;
+import com.ddd.airplane.account.AccountDto;
+import com.ddd.airplane.account.AccountService;
 import com.ddd.airplane.message.Message;
 import com.ddd.airplane.message.MessageService;
 import com.ddd.airplane.room.Room;

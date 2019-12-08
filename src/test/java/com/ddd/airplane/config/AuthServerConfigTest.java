@@ -1,7 +1,7 @@
 package com.ddd.airplane.config;
 
-import com.ddd.airplane.accounts.AccountDto;
-import com.ddd.airplane.accounts.AccountService;
+import com.ddd.airplane.account.AccountDto;
+import com.ddd.airplane.account.AccountService;
 import com.ddd.airplane.common.AppProperties;
 import com.ddd.airplane.common.BaseControllerTest;
 import org.junit.Before;
