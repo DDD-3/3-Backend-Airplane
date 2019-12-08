@@ -7,7 +7,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.math.BigInteger;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 
@@ -42,11 +41,12 @@ public class RoomRepository {
             return ps;
         }, keyHolder);
 
-        BigInteger key = (BigInteger) keyHolder.getKey();
-        assert key != null;
+
+        Number generatedKey = keyHolder.getKey();
+        assert generatedKey != null;
 
         return Room.builder()
-                .roomId(key.longValue())
+                .roomId(generatedKey.longValue())
                 .name(name)
                 .build();
     }

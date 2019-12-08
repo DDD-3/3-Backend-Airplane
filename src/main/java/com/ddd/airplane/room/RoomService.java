@@ -11,4 +11,8 @@ public class RoomService {
     public Room createRoom(String name) {
         return roomRepository.save(name);
     }
+
+    Room getRoom(String roomId) {
+        return roomRepository.findById(roomId);
+    }
 }

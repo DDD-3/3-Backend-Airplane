@@ -6,7 +6,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.math.BigInteger;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.Date;
@@ -29,11 +28,11 @@ public class MessageRepository {
             return ps;
         }, keyHolder);
 
-        BigInteger key = (BigInteger) keyHolder.getKey();
-        assert key != null;
+        Number generatedKey = keyHolder.getKey();
+        assert generatedKey != null;
 
         return Message.builder()
-                .messageId(key.longValue())
+                .messageId(generatedKey.longValue())
                 .roomId(message.getRoomId())
                 .senderId(message.getSenderId())
                 .content(message.getContent())

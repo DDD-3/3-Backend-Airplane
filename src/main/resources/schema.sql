@@ -1,9 +1,9 @@
 DROP TABLE IF EXISTS `account`;
 CREATE TABLE `account`
 (
-    `email`    varchar(64)  NOT NULL,
-    `password` varchar(128) NOT NULL,
-    `nickname` varchar(32)  NOT NULL,
+    `email`    VARCHAR(64)  NOT NULL,
+    `password` VARCHAR(128) NOT NULL,
+    `nickname` VARCHAR(32)  NOT NULL,
     PRIMARY KEY (`email`)
 );
 
