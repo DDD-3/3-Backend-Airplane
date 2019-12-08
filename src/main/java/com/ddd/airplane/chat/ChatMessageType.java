@@ -1,4 +1,4 @@
-package com.ddd.airplane.chats;
+package com.ddd.airplane.chat;
 
 public enum ChatMessageType {
     CHAT,

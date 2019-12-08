@@ -1,4 +1,4 @@
-package com.ddd.airplane.chats;
+package com.ddd.airplane.chat;
 
 import lombok.Getter;
 import lombok.Setter;

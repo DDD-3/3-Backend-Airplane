@@ -1,4 +1,4 @@
-package com.ddd.airplane.chats;
+package com.ddd.airplane.chat;
 
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
