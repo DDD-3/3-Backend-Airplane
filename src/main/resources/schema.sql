@@ -7,6 +7,26 @@ CREATE TABLE `accounts`
     PRIMARY KEY (`email`)
 );
 
+DROP TABLE IF EXISTS `room`;
+CREATE TABLE `room`
+(
+    `room_id` BIGINT NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(255) NOT NULL,
+    PRIMARY KEY (`room_id`)
+);
+
+DROP TABLE IF EXISTS `message`;
+CREATE TABLE `message`
+(
+    `message_id` BIGINT NOT NULL AUTO_INCREMENT,
+    `room_id` BIGINT NOT NULL,
+    `sender_id` VARCHAR(64) NOT NULL,
+    `content` VARCHAR(255) NOT NULL,
+    `created_at` DATETIME NOT NULL,
+    PRIMARY KEY (`message_id`),
+    INDEX `idx_room_id_created_at` (`room_id` ASC, `created_at` DESC)
+);
+
 DROP TABLE IF EXISTS `oauth_client_details`;
 CREATE TABLE `oauth_client_details`
 (
