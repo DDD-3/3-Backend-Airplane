@@ -15,7 +15,7 @@ import java.sql.Statement;
 public class RoomRepository {
     private final JdbcTemplate jdbcTemplate;
 
-    Room findById(String roomId) {
+    Room findById(Long roomId) {
         try {
             return jdbcTemplate.queryForObject(
                     RoomSql.FIND_BY_ID,

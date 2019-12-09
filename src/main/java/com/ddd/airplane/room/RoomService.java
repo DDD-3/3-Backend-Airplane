@@ -12,7 +12,7 @@ public class RoomService {
         return roomRepository.save(name);
     }
 
-    Room getRoom(String roomId) {
+    Room getRoom(Long roomId) {
         return roomRepository.findById(roomId);
     }
 }

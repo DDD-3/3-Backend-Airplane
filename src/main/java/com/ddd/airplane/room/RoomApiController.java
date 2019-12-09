@@ -15,7 +15,7 @@ public class RoomApiController {
     @GetMapping("/v1/rooms/{roomId}")
     @ResponseStatus(HttpStatus.OK)
     public Room getRoom(
-            @PathVariable String roomId,
+            @PathVariable Long roomId,
             @CurrentAccount Account account
     ) {
         return roomService.getRoom(roomId);
