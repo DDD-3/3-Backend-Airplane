@@ -12,15 +12,6 @@ import java.util.Map;
 @Controller
 public class ChatController {
 
-    @MessageMapping("/room/{roomId}/sendMessage")
-    @SendTo("/topic/room/{roomId}")
-    public ChatMessage sendMessage(
-            @DestinationVariable Long roomId,
-            @Payload ChatMessage chatMessage
-    ) {
-        return chatMessage;
-    }
-
     @MessageMapping("/room/{roomId}/joinRoom")
     @SendTo("/topic/room/{roomId}")
     public ChatMessage joinRoom(
@@ -31,6 +22,15 @@ public class ChatController {
         Map<String, Object> sessionAttributes = headerAccessor.getSessionAttributes();
         sessionAttributes.put("username", chatMessage.getSender());
         sessionAttributes.put("roomId", chatMessage.getRoomId());
+        return chatMessage;
+    }
+
+    @MessageMapping("/room/{roomId}/sendMessage")
+    @SendTo("/topic/room/{roomId}")
+    public ChatMessage sendMessage(
+            @DestinationVariable Long roomId,
+            @Payload ChatMessage chatMessage
+    ) {
         return chatMessage;
     }
 }
