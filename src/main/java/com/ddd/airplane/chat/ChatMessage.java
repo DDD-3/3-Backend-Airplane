@@ -8,4 +8,5 @@ public class ChatMessage {
     private ChatMessageType type;
     private String content;
     private String sender;
+    private Long roomId;
 }

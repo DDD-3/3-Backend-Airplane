@@ -1,14 +1,16 @@
 'use strict';
 
-var usernamePage = document.querySelector('#username-page');
+var joinPage = document.querySelector('#join-page');
 var chatPage = document.querySelector('#chat-page');
-var usernameForm = document.querySelector('#usernameForm');
+var joinForm = document.querySelector('#joinForm');
 var messageForm = document.querySelector('#messageForm');
 var messageInput = document.querySelector('#message');
 var messageArea = document.querySelector('#messageArea');
 var connectingElement = document.querySelector('.connecting');
 
 var stompClient = null;
+
+var roomId = null;
 var username = null;
 
 var colors = [
@@ -17,10 +19,11 @@ var colors = [
 ];
 
 function connect(event) {
+    roomId = document.querySelector('#roomId').value.trim();
     username = document.querySelector('#name').value.trim();
 
     if(username) {
-        usernamePage.classList.add('hidden');
+        joinPage.classList.add('hidden');
         chatPage.classList.remove('hidden');
 
         var socket = new SockJS('/ws');
@@ -34,12 +37,18 @@ function connect(event) {
 
 function onConnected() {
     // Subscribe to the Public Topic
-    stompClient.subscribe('/topic/public', onMessageReceived);
+    stompClient.subscribe(`/topic/room/${roomId}`, onMessageReceived);
 
     // Tell your username to the server
-    stompClient.send("/app/chat.addUser",
+    stompClient.send("/app/room/" + roomId + "/joinRoom",
         {},
-        JSON.stringify({sender: username, type: 'JOIN'})
+        JSON.stringify(
+            {
+                roomId: roomId,
+                sender: username,
+                type: 'JOIN'
+            }
+        )
     )
 
     connectingElement.classList.add('hidden');
@@ -60,7 +69,7 @@ function sendMessage(event) {
             content: messageInput.value,
             type: 'CHAT'
         };
-        stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(chatMessage));
+        stompClient.send(`/app/room/${roomId}/sendMessage`, {}, JSON.stringify(chatMessage));
         messageInput.value = '';
     }
     event.preventDefault();
@@ -114,5 +123,5 @@ function getAvatarColor(messageSender) {
     return colors[index];
 }
 
-usernameForm.addEventListener('submit', connect, true)
+joinForm.addEventListener('submit', connect, true)
 messageForm.addEventListener('submit', sendMessage, true)

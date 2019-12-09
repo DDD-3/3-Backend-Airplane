@@ -1,5 +1,6 @@
 package com.ddd.airplane.chat;
 
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -11,20 +12,25 @@ import java.util.Map;
 @Controller
 public class ChatController {
 
-    @MessageMapping("/chat.sendMessage")
-    @SendTo("/topic/public")
-    public ChatMessage sendMessage(@Payload ChatMessage chatMessage) {
+    @MessageMapping("/room/{roomId}/sendMessage")
+    @SendTo("/topic/room/{roomId}")
+    public ChatMessage sendMessage(
+            @DestinationVariable Long roomId,
+            @Payload ChatMessage chatMessage
+    ) {
         return chatMessage;
     }
 
-    @MessageMapping("/chat.addUser")
-    @SendTo("/topic/public")
-    public ChatMessage addUser(
+    @MessageMapping("/room/{roomId}/joinRoom")
+    @SendTo("/topic/room/{roomId}")
+    public ChatMessage joinRoom(
+            @DestinationVariable Long roomId,
             @Payload ChatMessage chatMessage,
             SimpMessageHeaderAccessor headerAccessor
     ) {
         Map<String, Object> sessionAttributes = headerAccessor.getSessionAttributes();
         sessionAttributes.put("username", chatMessage.getSender());
+        sessionAttributes.put("roomId", chatMessage.getRoomId());
         return chatMessage;
     }
 }
