@@ -1,4 +1,4 @@
-package com.ddd.airplane.chat;
+package com.ddd.airplane.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;

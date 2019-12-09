@@ -3,10 +3,13 @@ package com.ddd.airplane.chat;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Date;
+
 @Getter @Setter
-public class ChatMessage {
+class ChatMessage {
     private ChatMessageType type;
-    private String content;
-    private String sender;
     private Long roomId;
+    private String senderId;
+    private String content;
+    private Date createdAt = new Date();
 }

@@ -1,7 +1,7 @@
 package com.ddd.airplane.chat;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
@@ -10,11 +10,10 @@ import org.springframework.web.socket.messaging.SessionConnectedEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 @Slf4j
+@RequiredArgsConstructor
 @Component
 public class WebSocketEventListener {
-
-    @Autowired
-    private SimpMessageSendingOperations messagingTemplate;
+    private final SimpMessageSendingOperations messagingTemplate;
 
     @EventListener
     public void handleSocketConnectListener(SessionConnectedEvent event) {
@@ -32,7 +31,7 @@ public class WebSocketEventListener {
 
             ChatMessage chatMessage = new ChatMessage();
             chatMessage.setType(ChatMessageType.LEAVE);
-            chatMessage.setSender(username);
+            chatMessage.setSenderId(username);
 
             messagingTemplate.convertAndSend("/topic/room/" + roomId, chatMessage);
         }

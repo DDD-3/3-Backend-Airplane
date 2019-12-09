@@ -20,7 +20,7 @@ public class ChatController {
             SimpMessageHeaderAccessor headerAccessor
     ) {
         Map<String, Object> sessionAttributes = headerAccessor.getSessionAttributes();
-        sessionAttributes.put("username", chatMessage.getSender());
+        sessionAttributes.put("username", chatMessage.getSenderId());
         sessionAttributes.put("roomId", chatMessage.getRoomId());
         return chatMessage;
     }

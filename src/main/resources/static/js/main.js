@@ -44,9 +44,9 @@ function onConnected() {
         {},
         JSON.stringify(
             {
+                type: 'JOIN',
                 roomId: roomId,
-                sender: username,
-                type: 'JOIN'
+                senderId: username
             }
         )
     )
@@ -65,9 +65,10 @@ function sendMessage(event) {
     var messageContent = messageInput.value.trim();
     if(messageContent && stompClient) {
         var chatMessage = {
-            sender: username,
-            content: messageInput.value,
-            type: 'CHAT'
+            type: 'CHAT',
+            roomId: roomId,
+            senderId: username,
+            content: messageInput.value
         };
         stompClient.send(`/app/room/${roomId}/sendMessage`, {}, JSON.stringify(chatMessage));
         messageInput.value = '';
@@ -83,22 +84,22 @@ function onMessageReceived(payload) {
 
     if(message.type === 'JOIN') {
         messageElement.classList.add('event-message');
-        message.content = message.sender + ' joined!';
+        message.content = message.senderId + ' joined!';
     } else if (message.type === 'LEAVE') {
         messageElement.classList.add('event-message');
-        message.content = message.sender + ' left!';
+        message.content = message.senderId + ' left!';
     } else {
         messageElement.classList.add('chat-message');
 
         var avatarElement = document.createElement('i');
-        var avatarText = document.createTextNode(message.sender[0]);
+        var avatarText = document.createTextNode(message.senderId[0]);
         avatarElement.appendChild(avatarText);
-        avatarElement.style['background-color'] = getAvatarColor(message.sender);
+        avatarElement.style['background-color'] = getAvatarColor(message.senderId);
 
         messageElement.appendChild(avatarElement);
 
         var usernameElement = document.createElement('span');
-        var usernameText = document.createTextNode(message.sender);
+        var usernameText = document.createTextNode(message.senderId);
         usernameElement.appendChild(usernameText);
         messageElement.appendChild(usernameElement);
     }
@@ -114,10 +115,10 @@ function onMessageReceived(payload) {
 }
 
 
-function getAvatarColor(messageSender) {
+function getAvatarColor(messageSenderId) {
     var hash = 0;
-    for (var i = 0; i < messageSender.length; i++) {
-        hash = 31 * hash + messageSender.charCodeAt(i);
+    for (var i = 0; i < messageSenderId.length; i++) {
+        hash = 31 * hash + messageSenderId.charCodeAt(i);
     }
     var index = Math.abs(hash % colors.length);
     return colors[index];
