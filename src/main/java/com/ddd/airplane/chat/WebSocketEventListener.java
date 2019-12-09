@@ -8,6 +8,7 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.SessionConnectedEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
+import org.springframework.web.socket.messaging.SessionSubscribeEvent;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -16,12 +17,17 @@ public class WebSocketEventListener {
     private final SimpMessageSendingOperations messagingTemplate;
 
     @EventListener
-    public void handleSocketConnectListener(SessionConnectedEvent event) {
+    public void handleConnectedListener(SessionConnectedEvent event) {
         log.info("Received a new web socket connection");
     }
 
     @EventListener
-    public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
+    public void handleSubscribeListener(SessionSubscribeEvent event) {
+        //
+    }
+
+    @EventListener
+    public void handleDisconnectListener(SessionDisconnectEvent event) {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
 
         String username = (String) headerAccessor.getSessionAttributes().get("username");
