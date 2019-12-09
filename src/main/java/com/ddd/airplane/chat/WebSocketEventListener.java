@@ -26,6 +26,7 @@ public class WebSocketEventListener {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
 
         String username = (String) headerAccessor.getSessionAttributes().get("username");
+        Long roomId = (Long) headerAccessor.getSessionAttributes().get("roomId");
         if (username != null) {
             log.info("User Disconnected : " + username);
 
@@ -33,7 +34,7 @@ public class WebSocketEventListener {
             chatMessage.setType(ChatMessageType.LEAVE);
             chatMessage.setSender(username);
 
-            messagingTemplate.convertAndSend("/topic/public", chatMessage);
+            messagingTemplate.convertAndSend("/topic/room/" + roomId, chatMessage);
         }
     }
 }
