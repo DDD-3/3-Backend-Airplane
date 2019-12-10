@@ -11,7 +11,7 @@ var connectingElement = document.querySelector('.connecting');
 var stompClient = null;
 
 var roomId = null;
-var username = null;
+var accessToken = null;
 
 var colors = [
     '#2196F3', '#32c787', '#00BCD4', '#ff5652',
@@ -20,16 +20,16 @@ var colors = [
 
 function connect(event) {
     roomId = document.querySelector('#roomId').value.trim();
-    username = document.querySelector('#name').value.trim();
+    accessToken = document.querySelector('#accessToken').value.trim();
 
-    if(username) {
+    if(accessToken) {
         joinPage.classList.add('hidden');
         chatPage.classList.remove('hidden');
 
         var socket = new SockJS('/ws');
         stompClient = Stomp.over(socket);
 
-        stompClient.connect({}, onConnected, onError);
+        stompClient.connect({"access-token":accessToken}, onConnected, onError);
     }
     event.preventDefault();
 }
@@ -45,8 +45,7 @@ function onConnected() {
         JSON.stringify(
             {
                 type: 'JOIN',
-                roomId: roomId,
-                senderId: username
+                roomId: roomId
             }
         )
     )
@@ -67,7 +66,6 @@ function sendMessage(event) {
         var chatMessage = {
             type: 'CHAT',
             roomId: roomId,
-            senderId: username,
             content: messageInput.value
         };
         stompClient.send(`/app/room/${roomId}/sendMessage`, {}, JSON.stringify(chatMessage));

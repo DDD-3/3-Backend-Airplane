@@ -6,7 +6,7 @@ import org.springframework.security.core.userdetails.User;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-class AccountAdapter extends User {
+public class AccountAdapter extends User {
     private Account account;
 
     AccountAdapter(Account account) {

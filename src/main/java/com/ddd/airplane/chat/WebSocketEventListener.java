@@ -29,15 +29,15 @@ public class WebSocketEventListener {
     @EventListener
     public void handleDisconnectListener(SessionDisconnectEvent event) {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
-
-        String username = (String) headerAccessor.getSessionAttributes().get("username");
+        String email = (String) headerAccessor.getSessionAttributes().get("email");
         Long roomId = (Long) headerAccessor.getSessionAttributes().get("roomId");
-        if (username != null) {
-            log.info("User Disconnected : " + username);
+
+        if (email != null) {
+            log.info("User Disconnected : " + email);
 
             ChatMessage chatMessage = new ChatMessage();
             chatMessage.setType(ChatMessageType.LEAVE);
-            chatMessage.setSenderId(username);
+            chatMessage.setSenderId(email);
 
             messagingTemplate.convertAndSend("/topic/room/" + roomId, chatMessage);
         }

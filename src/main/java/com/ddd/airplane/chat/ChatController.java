@@ -20,8 +20,12 @@ public class ChatController {
             SimpMessageHeaderAccessor headerAccessor
     ) {
         Map<String, Object> sessionAttributes = headerAccessor.getSessionAttributes();
-        sessionAttributes.put("username", chatMessage.getSenderId());
+
         sessionAttributes.put("roomId", chatMessage.getRoomId());
+
+        String email = (String) sessionAttributes.get("email");
+        chatMessage.setSenderId(email);
+
         return chatMessage;
     }
 
@@ -29,8 +33,14 @@ public class ChatController {
     @SendTo("/topic/room/{roomId}")
     public ChatMessage sendMessage(
             @DestinationVariable Long roomId,
-            @Payload ChatMessage chatMessage
+            @Payload ChatMessage chatMessage,
+            SimpMessageHeaderAccessor headerAccessor
     ) {
+        Map<String, Object> sessionAttributes = headerAccessor.getSessionAttributes();
+
+        String email = (String) sessionAttributes.get("email");
+        chatMessage.setSenderId(email);
+
         return chatMessage;
     }
 }
