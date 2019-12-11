@@ -34,9 +34,9 @@ public class ChatChannelInterceptor implements ChannelInterceptor {
             AccountAdapter accountAdapter = (AccountAdapter) authentication.getPrincipal();
             Account account = accountAdapter.getAccount();
 
-            // set email to session attributes
+            // set account to session attributes
             Map<String, Object> sessionAttributes = accessor.getSessionAttributes();
-            sessionAttributes.put("email", account.getEmail());
+            sessionAttributes.put("account", account);
 
         }
 

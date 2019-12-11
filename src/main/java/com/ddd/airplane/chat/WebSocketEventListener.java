@@ -1,5 +1,7 @@
 package com.ddd.airplane.chat;
 
+import com.ddd.airplane.account.Account;
+import com.ddd.airplane.room.Room;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
@@ -29,10 +31,12 @@ public class WebSocketEventListener {
     @EventListener
     public void handleDisconnectListener(SessionDisconnectEvent event) {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
-        String email = (String) headerAccessor.getSessionAttributes().get("email");
-        Long roomId = (Long) headerAccessor.getSessionAttributes().get("roomId");
+        Account account = (Account) headerAccessor.getSessionAttributes().get("account");
+        Room room = (Room) headerAccessor.getSessionAttributes().get("room");
+        String email = account.getEmail();
+        Long roomId = room.getRoomId();
 
-        if (email != null) {
+        if (email != null && roomId != null) {
             log.info("User Disconnected : " + email);
 
             ChatMessage chatMessage = new ChatMessage();

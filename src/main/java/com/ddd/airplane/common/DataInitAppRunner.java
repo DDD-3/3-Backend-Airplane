@@ -40,6 +40,14 @@ public class DataInitAppRunner implements ApplicationRunner {
                         .build()
         );
 
+        Account bar = accountService.createAccount(
+                AccountDto.builder()
+                        .email("bar@gmail.com")
+                        .password("password")
+                        .nickname("bar")
+                        .build()
+        );
+
         // room 1
         Room r1 = roomService.createRoom("r1");
         messageService.createMessage(

@@ -1,46 +1,86 @@
 package com.ddd.airplane.chat;
 
-import org.springframework.messaging.handler.annotation.DestinationVariable;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.handler.annotation.SendTo;
+import com.ddd.airplane.account.Account;
+import com.ddd.airplane.room.Room;
+import com.ddd.airplane.room.RoomService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.messaging.handler.annotation.*;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
+import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
 
+import java.text.MessageFormat;
 import java.util.Map;
 
+@Slf4j
+@RequiredArgsConstructor
 @Controller
 public class ChatController {
+    private final RoomService roomService;
+    private final SimpMessageSendingOperations messagingTemplate;
 
-    @MessageMapping("/room/{roomId}/joinRoom")
-    @SendTo("/topic/room/{roomId}")
-    public ChatMessage joinRoom(
+    @MessageMapping("/room/{roomId}/join")
+    public void join(
             @DestinationVariable Long roomId,
-            @Payload ChatMessage chatMessage,
             SimpMessageHeaderAccessor headerAccessor
     ) {
+        Room room = roomService.getRoom(roomId);
+        if (room == null) {
+            throw new RoomNotFoundException(String.valueOf(roomId));
+        }
+
         Map<String, Object> sessionAttributes = headerAccessor.getSessionAttributes();
+        sessionAttributes.put("room", room);
 
-        sessionAttributes.put("roomId", chatMessage.getRoomId());
+        Account account = (Account) sessionAttributes.get("account");
 
-        String email = (String) sessionAttributes.get("email");
-        chatMessage.setSenderId(email);
-
-        return chatMessage;
+        messagingTemplate.convertAndSend(
+                MessageFormat.format("/topic/room/{0}", roomId),
+                new ChatMessage(
+                        ChatMessageType.JOIN,
+                        roomId,
+                        account.getEmail())
+        );
     }
 
-    @MessageMapping("/room/{roomId}/sendMessage")
-    @SendTo("/topic/room/{roomId}")
-    public ChatMessage sendMessage(
+    @MessageMapping("/room/{roomId}/chat")
+    public void chat(
             @DestinationVariable Long roomId,
             @Payload ChatMessage chatMessage,
             SimpMessageHeaderAccessor headerAccessor
     ) {
         Map<String, Object> sessionAttributes = headerAccessor.getSessionAttributes();
+        Room room = (Room) sessionAttributes.get("room");
+        if (room == null || !roomId.equals(room.getRoomId())) {
+            throw new RoomInvalidException(String.valueOf(roomId));
+        }
 
-        String email = (String) sessionAttributes.get("email");
-        chatMessage.setSenderId(email);
+        Account account = (Account) sessionAttributes.get("account");
 
-        return chatMessage;
+        messagingTemplate.convertAndSend(
+                MessageFormat.format("/topic/room/{0}", roomId),
+                new ChatMessage(
+                        ChatMessageType.CHAT,
+                        roomId,
+                        account.getEmail(),
+                        chatMessage.getContent())
+        );
+    }
+
+    // TODO : send error message to a connected user currently
+    @MessageExceptionHandler
+    @SendToUser(value = "/queue/errors", broadcast = false)
+    public ChatError roomNotFoundException(RoomNotFoundException e) {
+        log.error(e.getMessage());
+        return new ChatError(e.getMessage());
+    }
+
+    @MessageExceptionHandler
+    @SendToUser(value = "/queue/errors", broadcast = false)
+    public ChatError roomInvalidException(RoomInvalidException e) {
+        log.error(e.getMessage());
+        return new ChatError(e.getMessage());
     }
 }

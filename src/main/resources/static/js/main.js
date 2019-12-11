@@ -40,14 +40,9 @@ function onConnected() {
     stompClient.subscribe(`/topic/room/${roomId}`, onMessageReceived);
 
     // Tell your username to the server
-    stompClient.send("/app/room/" + roomId + "/joinRoom",
+    stompClient.send("/app/room/" + roomId + "/join",
         {},
-        JSON.stringify(
-            {
-                type: 'JOIN',
-                roomId: roomId
-            }
-        )
+        null
     )
 
     connectingElement.classList.add('hidden');
@@ -68,7 +63,7 @@ function sendMessage(event) {
             roomId: roomId,
             content: messageInput.value
         };
-        stompClient.send(`/app/room/${roomId}/sendMessage`, {}, JSON.stringify(chatMessage));
+        stompClient.send(`/app/room/${roomId}/chat`, {}, JSON.stringify(chatMessage));
         messageInput.value = '';
     }
     event.preventDefault();
@@ -76,6 +71,8 @@ function sendMessage(event) {
 
 
 function onMessageReceived(payload) {
+    console.log(payload);
+
     var message = JSON.parse(payload.body);
 
     var messageElement = document.createElement('li');
