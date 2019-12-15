@@ -1,6 +1,8 @@
 package com.ddd.airplane.chat;
 
 import com.ddd.airplane.account.Account;
+import com.ddd.airplane.message.Message;
+import com.ddd.airplane.message.MessageService;
 import com.ddd.airplane.room.Room;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +21,7 @@ import java.util.Map;
 @Controller
 public class ChatController {
     private final SimpMessageSendingOperations messagingTemplate;
+    private final MessageService messageService;
 
     @MessageMapping("/room/{roomId}/chat")
     public void chat(
@@ -34,14 +37,23 @@ public class ChatController {
 
         Account account = (Account) sessionAttributes.get("account");
 
+        Message message = messageService.createMessage(
+                Message.builder()
+                        .roomId(room.getRoomId())
+                        .senderId(account.getEmail())
+                        .content(chatMessage.getContent())
+                        .build());
+
         messagingTemplate.convertAndSend(
                 MessageFormat.format("/topic/room/{0}", roomId),
-                new ChatMessage(
-                        ChatMessageType.CHAT,
-                        roomId,
-                        account.getEmail(),
-                        account.getNickname(),
-                        chatMessage.getContent())
+                ChatMessage.builder()
+                    .type(ChatMessageType.CHAT)
+                    .messageId(message.getMessageId())
+                    .roomId(room.getRoomId())
+                    .senderId(account.getEmail())
+                    .senderNickName(account.getNickname())
+                    .content(message.getContent())
+                    .build()
         );
     }
 }

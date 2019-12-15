@@ -6,6 +6,7 @@ import lombok.*;
 @Builder @NoArgsConstructor @AllArgsConstructor
 class ChatMessage {
     private ChatMessageType type;
+    private Long messageId;
     private Long roomId;
     private String senderId;
     private String senderNickName;
