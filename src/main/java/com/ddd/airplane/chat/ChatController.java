@@ -40,6 +40,7 @@ public class ChatController {
                         ChatMessageType.CHAT,
                         roomId,
                         account.getEmail(),
+                        account.getNickname(),
                         chatMessage.getContent())
         );
     }

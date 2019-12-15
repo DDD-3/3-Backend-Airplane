@@ -35,13 +35,12 @@ public class ChatChannelInterceptor implements ChannelInterceptor {
         Map<String, Object> sessionAttributes = accessor.getSessionAttributes();
 
         if (StompCommand.CONNECT == accessor.getCommand()) {
-            // get principal using access token
+            // get authenticated account using access token
             String accessToken = accessor.getFirstNativeHeader("access-token");
             Authentication authentication = tokenStore.readAuthentication(accessToken);
             if (authentication == null) {
                 throw new AuthNotFoundException(accessToken);
             }
-
             AccountAdapter accountAdapter = (AccountAdapter) authentication.getPrincipal();
             Account account = accountAdapter.getAccount();
             // set account to session attributes
@@ -58,34 +57,34 @@ public class ChatChannelInterceptor implements ChannelInterceptor {
             // set room to session attributes
             sessionAttributes.put("room", room);
             // get account from session attributes
-            Account account = (Account) accessor.getSessionAttributes().get("account");
-            String email = account.getEmail();
-            // send joined message
-            if (email != null && roomId != null) {
-                log.info("User Joined : " + email);
-                ChatMessage chatMessage = new ChatMessage();
-                chatMessage.setType(ChatMessageType.JOIN);
-                chatMessage.setRoomId(roomId);
-                chatMessage.setSenderId(email);
-                messageSendingOperations.convertAndSend("/topic/room/" + roomId, chatMessage);
+            Account account = (Account) sessionAttributes.get("account");
+            // send message
+            if (account != null) {
+                log.info("User Joined : " + account.getEmail());
+                messageSendingOperations.convertAndSend(
+                        "/topic/room/" + roomId,
+                        ChatMessage.builder()
+                                .type(ChatMessageType.JOIN)
+                                .roomId(room.getRoomId())
+                                .senderId(account.getEmail())
+                                .senderNickName(account.getNickname())
+                                .build());
             }
         } else if (StompCommand.DISCONNECT == accessor.getCommand()) {
             // get account, room from session attributes
-            Account account = (Account) accessor.getSessionAttributes().get("account");
-            Room room = (Room) accessor.getSessionAttributes().get("room");
-            if (account == null || room == null) {
-                return message;
-            }
-
-            // send disconnected message
-            String email = account.getEmail();
-            Long roomId = room.getRoomId();
-            if (email != null && roomId != null) {
-                log.info("User Disconnected : " + email);
-                ChatMessage chatMessage = new ChatMessage();
-                chatMessage.setType(ChatMessageType.LEAVE);
-                chatMessage.setSenderId(email);
-                messageSendingOperations.convertAndSend("/topic/room/" + roomId, chatMessage);
+            Account account = (Account) sessionAttributes.get("account");
+            Room room = (Room) sessionAttributes.get("room");
+            // send message
+            if (account != null && room != null) {
+                log.info("User Disconnected : " + account.getEmail());
+                messageSendingOperations.convertAndSend(
+                        "/topic/room/" + room.getRoomId(),
+                        ChatMessage.builder()
+                                .type(ChatMessageType.LEAVE)
+                                .roomId(room.getRoomId())
+                                .senderId(account.getEmail())
+                                .senderNickName(account.getNickname())
+                                .build());
             }
         }
 

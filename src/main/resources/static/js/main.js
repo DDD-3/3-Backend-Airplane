@@ -73,22 +73,22 @@ function onMessageReceived(payload) {
 
     if(message.type === 'JOIN') {
         messageElement.classList.add('event-message');
-        message.content = message.senderId + ' joined!';
+        message.content = message.senderNickName + ' joined!';
     } else if (message.type === 'LEAVE') {
         messageElement.classList.add('event-message');
-        message.content = message.senderId + ' left!';
+        message.content = message.senderNickName + ' left!';
     } else {
         messageElement.classList.add('chat-message');
 
         var avatarElement = document.createElement('i');
-        var avatarText = document.createTextNode(message.senderId[0]);
+        var avatarText = document.createTextNode(message.senderNickName[0]);
         avatarElement.appendChild(avatarText);
-        avatarElement.style['background-color'] = getAvatarColor(message.senderId);
+        avatarElement.style['background-color'] = getAvatarColor(message.senderNickName);
 
         messageElement.appendChild(avatarElement);
 
         var usernameElement = document.createElement('span');
-        var usernameText = document.createTextNode(message.senderId);
+        var usernameText = document.createTextNode(message.senderNickName);
         usernameElement.appendChild(usernameText);
         messageElement.appendChild(usernameElement);
     }
@@ -104,10 +104,10 @@ function onMessageReceived(payload) {
 }
 
 
-function getAvatarColor(messageSenderId) {
+function getAvatarColor(messageSenderNickName) {
     var hash = 0;
-    for (var i = 0; i < messageSenderId.length; i++) {
-        hash = 31 * hash + messageSenderId.charCodeAt(i);
+    for (var i = 0; i < messageSenderNickName.length; i++) {
+        hash = 31 * hash + messageSenderNickName.charCodeAt(i);
     }
     var index = Math.abs(hash % colors.length);
     return colors[index];
