@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
-import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
@@ -25,9 +24,9 @@ public class ChatChannelInterceptor implements ChannelInterceptor {
     @Autowired
     private TokenStore tokenStore;
     @Autowired
-    private SimpMessageSendingOperations messageSendingOperations;
-    @Autowired
     private RoomService roomService;
+    @Autowired
+    private RedisPublisher redisPublisher;
 
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
@@ -54,6 +53,8 @@ public class ChatChannelInterceptor implements ChannelInterceptor {
             if (room == null) {
                 throw new RoomNotFoundException(roomId);
             }
+            // add topic
+            roomService.addTopic(room.getRoomId());
             // set room to session attributes
             sessionAttributes.put("room", room);
             // get account from session attributes
@@ -61,8 +62,8 @@ public class ChatChannelInterceptor implements ChannelInterceptor {
             // send message
             if (account != null) {
                 log.info("User Joined : " + account.getEmail());
-                messageSendingOperations.convertAndSend(
-                        "/topic/room/" + roomId,
+                redisPublisher.publish(
+                        roomService.getTopic(room.getRoomId()),
                         ChatMessage.builder()
                                 .type(ChatMessageType.JOIN)
                                 .roomId(room.getRoomId())
@@ -77,8 +78,8 @@ public class ChatChannelInterceptor implements ChannelInterceptor {
             // send message
             if (account != null && room != null) {
                 log.info("User Disconnected : " + account.getEmail());
-                messageSendingOperations.convertAndSend(
-                        "/topic/room/" + room.getRoomId(),
+                redisPublisher.publish(
+                        roomService.getTopic(room.getRoomId()),
                         ChatMessage.builder()
                                 .type(ChatMessageType.LEAVE)
                                 .roomId(room.getRoomId())
