@@ -39,12 +39,6 @@ function onConnected() {
     // Subscribe to the Public Topic
     stompClient.subscribe(`/topic/room/${roomId}`, onMessageReceived);
 
-    // Tell your username to the server
-    stompClient.send("/app/room/" + roomId + "/join",
-        {},
-        null
-    )
-
     connectingElement.classList.add('hidden');
 }
 

@@ -1,7 +1,7 @@
 package com.ddd.airplane.chat;
 
 class RoomNotFoundException extends RuntimeException {
-    RoomNotFoundException(String message) {
-        super("Room Not Found : " + message);
+    RoomNotFoundException(Long roomId) {
+        super("Room Not Found : " + roomId);
     }
 }
