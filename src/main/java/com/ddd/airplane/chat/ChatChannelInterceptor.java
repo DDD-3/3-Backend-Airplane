@@ -38,6 +38,10 @@ public class ChatChannelInterceptor implements ChannelInterceptor {
             // get principal using access token
             String accessToken = accessor.getFirstNativeHeader("access-token");
             Authentication authentication = tokenStore.readAuthentication(accessToken);
+            if (authentication == null) {
+                throw new AuthNotFoundException(accessToken);
+            }
+
             AccountAdapter accountAdapter = (AccountAdapter) authentication.getPrincipal();
             Account account = accountAdapter.getAccount();
             // set account to session attributes
@@ -69,9 +73,13 @@ public class ChatChannelInterceptor implements ChannelInterceptor {
             // get account, room from session attributes
             Account account = (Account) accessor.getSessionAttributes().get("account");
             Room room = (Room) accessor.getSessionAttributes().get("room");
+            if (account == null || room == null) {
+                return message;
+            }
+
+            // send disconnected message
             String email = account.getEmail();
             Long roomId = room.getRoomId();
-            // send disconnected message
             if (email != null && roomId != null) {
                 log.info("User Disconnected : " + email);
                 ChatMessage chatMessage = new ChatMessage();
