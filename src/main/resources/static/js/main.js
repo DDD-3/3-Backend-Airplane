@@ -52,12 +52,12 @@ function onError(error) {
 function sendMessage(event) {
     var messageContent = messageInput.value.trim();
     if(messageContent && stompClient) {
-        var chatMessage = {
+        var messagePayload = {
             type: 'CHAT',
             roomId: roomId,
             content: messageInput.value
         };
-        stompClient.send(`/app/room/${roomId}/chat`, {}, JSON.stringify(chatMessage));
+        stompClient.send(`/app/room/${roomId}/chat`, {}, JSON.stringify(messagePayload));
         messageInput.value = '';
     }
     event.preventDefault();

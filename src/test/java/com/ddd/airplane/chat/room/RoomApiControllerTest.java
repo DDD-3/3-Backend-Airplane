@@ -1,7 +1,9 @@
-package com.ddd.airplane.room;
+package com.ddd.airplane.chat.room;
 
 import com.ddd.airplane.account.AccountDto;
 import com.ddd.airplane.account.AccountService;
+import com.ddd.airplane.chat.room.Room;
+import com.ddd.airplane.chat.room.RoomService;
 import com.ddd.airplane.common.AppProperties;
 import com.ddd.airplane.common.BaseControllerTest;
 import org.junit.Before;

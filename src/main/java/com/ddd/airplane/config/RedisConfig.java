@@ -1,6 +1,6 @@
 package com.ddd.airplane.config;
 
-import com.ddd.airplane.chat.RedisSubscriber;
+import com.ddd.airplane.chat.ChatSubscriber;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -17,7 +17,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @RequiredArgsConstructor
 @Configuration
 public class RedisConfig {
-    private final RedisSubscriber redisSubscriber;
+    private final ChatSubscriber chatSubscriber;
 
     @Value("${spring.redis.host}")
     private String redisHost;
@@ -53,6 +53,6 @@ public class RedisConfig {
 
     @Bean
     public MessageListenerAdapter messageListenerAdapter() {
-        return new MessageListenerAdapter(redisSubscriber, "handleMessage");
+        return new MessageListenerAdapter(chatSubscriber, "handleMessage");
     }
 }

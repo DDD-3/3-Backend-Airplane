@@ -1,4 +1,4 @@
-package com.ddd.airplane.room;
+package com.ddd.airplane.chat.room;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

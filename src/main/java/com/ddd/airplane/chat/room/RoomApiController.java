@@ -1,4 +1,4 @@
-package com.ddd.airplane.room;
+package com.ddd.airplane.chat.room;
 
 import com.ddd.airplane.account.Account;
 import com.ddd.airplane.account.CurrentAccount;

@@ -1,4 +1,4 @@
-package com.ddd.airplane.room;
+package com.ddd.airplane.chat.room;
 
 class RoomSql {
     static final String FIND_BY_ID = "SELECT room_id, name FROM room WHERE room_id = ?";

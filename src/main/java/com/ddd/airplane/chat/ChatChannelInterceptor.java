@@ -2,8 +2,10 @@ package com.ddd.airplane.chat;
 
 import com.ddd.airplane.account.Account;
 import com.ddd.airplane.account.AccountAdapter;
-import com.ddd.airplane.room.Room;
-import com.ddd.airplane.room.RoomService;
+import com.ddd.airplane.account.AccountNotFoundException;
+import com.ddd.airplane.chat.room.Room;
+import com.ddd.airplane.chat.room.RoomNotFoundException;
+import com.ddd.airplane.chat.room.RoomService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.Message;
@@ -35,7 +37,7 @@ public class ChatChannelInterceptor implements ChannelInterceptor {
             String accessToken = accessor.getFirstNativeHeader("access-token");
             Authentication authentication = tokenStore.readAuthentication(accessToken);
             if (authentication == null) {
-                throw new AuthNotFoundException(accessToken);
+                throw new AccountNotFoundException(accessToken);
             }
             AccountAdapter accountAdapter = (AccountAdapter) authentication.getPrincipal();
             Account account = accountAdapter.getAccount();
@@ -55,7 +57,7 @@ public class ChatChannelInterceptor implements ChannelInterceptor {
             // get account from session attributes
             Account account = (Account) sessionAttributes.get("account");
             if (account != null) {
-                log.info("JOINED : accountEmail={}, roomId={}", account.getEmail(), room.getRoomId());
+                log.info("JOIN : accountEmail={}, roomId={}", account.getEmail(), room.getRoomId());
             }
         } else if (StompCommand.DISCONNECT == accessor.getCommand()) {
             // get account from session attributes

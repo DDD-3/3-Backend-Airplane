@@ -1,9 +1,12 @@
 package com.ddd.airplane.chat;
 
 import com.ddd.airplane.account.Account;
-import com.ddd.airplane.message.Message;
-import com.ddd.airplane.message.MessageService;
-import com.ddd.airplane.room.Room;
+import com.ddd.airplane.chat.message.MessagePayload;
+import com.ddd.airplane.chat.message.MessagePayloadType;
+import com.ddd.airplane.chat.message.Message;
+import com.ddd.airplane.chat.message.MessageService;
+import com.ddd.airplane.chat.room.Room;
+import com.ddd.airplane.chat.room.RoomInvalidException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -27,7 +30,7 @@ public class ChatController {
     @MessageMapping("/room/{roomId}/chat")
     public void chat(
             @DestinationVariable Long roomId,
-            @Payload ChatMessage chatMessage,
+            @Payload MessagePayload messagePayload,
             SimpMessageHeaderAccessor headerAccessor
     ) {
         Map<String, Object> sessionAttributes = headerAccessor.getSessionAttributes();
@@ -42,13 +45,13 @@ public class ChatController {
                 Message.builder()
                         .roomId(room.getRoomId())
                         .senderId(account.getEmail())
-                        .content(chatMessage.getContent())
+                        .content(messagePayload.getContent())
                         .build());
 
         redisTemplate.convertAndSend(
                 channelTopic.getTopic(),
-                ChatMessage.builder()
-                        .type(ChatMessageType.CHAT)
+                MessagePayload.builder()
+                        .type(MessagePayloadType.CHAT)
                         .messageId(message.getMessageId())
                         .roomId(room.getRoomId())
                         .senderId(account.getEmail())
