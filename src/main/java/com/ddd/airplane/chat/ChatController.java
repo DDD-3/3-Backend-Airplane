@@ -4,9 +4,10 @@ import com.ddd.airplane.account.Account;
 import com.ddd.airplane.message.Message;
 import com.ddd.airplane.message.MessageService;
 import com.ddd.airplane.room.Room;
-import com.ddd.airplane.room.RoomService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -20,8 +21,8 @@ import java.util.Map;
 @Controller
 public class ChatController {
     private final MessageService messageService;
-    private final RedisPublisher redisPublisher;
-    private final RoomService roomService;
+    private final RedisTemplate redisTemplate;
+    private final ChannelTopic channelTopic;
 
     @MessageMapping("/room/{roomId}/chat")
     public void chat(
@@ -44,8 +45,8 @@ public class ChatController {
                         .content(chatMessage.getContent())
                         .build());
 
-        redisPublisher.publish(
-                roomService.getTopic(room.getRoomId()),
+        redisTemplate.convertAndSend(
+                channelTopic.getTopic(),
                 ChatMessage.builder()
                         .type(ChatMessageType.CHAT)
                         .messageId(message.getMessageId())
