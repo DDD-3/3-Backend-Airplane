@@ -11,4 +11,5 @@ public class MessagePayload {
     private String senderId;
     private String senderNickName;
     private String content;
+    private Long userCount;
 }
