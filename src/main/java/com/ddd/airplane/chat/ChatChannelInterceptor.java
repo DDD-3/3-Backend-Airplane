@@ -54,6 +54,8 @@ public class ChatChannelInterceptor implements ChannelInterceptor {
             }
             // set room to session attributes
             sessionAttributes.put("room", room);
+            // increment user count
+            roomService.incrementUserCount(room.getRoomId());
             // get account from session attributes
             Account account = (Account) sessionAttributes.get("account");
             if (account != null) {
@@ -63,8 +65,10 @@ public class ChatChannelInterceptor implements ChannelInterceptor {
             // get account from session attributes
             Account account = (Account) sessionAttributes.get("account");
             Room room = (Room) sessionAttributes.get("room");
+            // decrement user count
+            roomService.decrementUserCount(room.getRoomId());
             // send message
-            if (account != null && room != null) {
+            if (account != null) {
                 log.info("LEAVE : accountEmail={}, roomId={}", account.getEmail(), room.getRoomId());
             }
         }

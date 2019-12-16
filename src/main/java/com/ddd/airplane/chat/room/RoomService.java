@@ -15,4 +15,12 @@ public class RoomService {
     public Room getRoom(Long roomId) {
         return roomRepository.findById(roomId);
     }
+
+    public Long incrementUserCount(Long roomId) {
+        return roomRepository.incrementUserCount(roomId);
+    }
+
+    public Long decrementUserCount(Long roomId) {
+        return roomRepository.decrementUserCount(roomId);
+    }
 }

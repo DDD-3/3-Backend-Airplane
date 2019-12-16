@@ -7,4 +7,5 @@ import lombok.*;
 public class Room {
     private Long roomId;
     private String name;
+    private Long userCount;
 }
