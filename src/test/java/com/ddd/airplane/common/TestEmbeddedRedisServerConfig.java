@@ -71,7 +71,7 @@ public class TestEmbeddedRedisServerConfig {
                 pidInfo.append(line);
             }
         } catch (Exception e) {
-            //
+            e.printStackTrace();
         }
         log.info("GREP PROCESS END");
 
