@@ -1,10 +1,13 @@
 package com.ddd.airplane.account;
 
+import com.ddd.airplane.chat.room.Room;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @AllArgsConstructor
 @RestController
@@ -25,5 +28,27 @@ public class AccountApiController {
             @CurrentAccount Account account
     ) {
         return accountService.getAccount(email);
+    }
+
+    // TODO : 참여한 채팅방 목록
+    @GetMapping("/v1/accounts/{email}/joinedRooms")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Room> getJoinedRooms(
+            @PathVariable String email,
+            @CurrentAccount Account account,
+            Pageable pageable
+    ) {
+        return List.of();
+    }
+
+    // TODO : 구독한 주제의 채팅방 목록
+    @GetMapping("/v1/accounts/{email}/roomsOfSubscribedSubjects")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Room> getSubscribedRooms(
+            @PathVariable String email,
+            @CurrentAccount Account account,
+            Pageable pageable
+    ) {
+        return List.of();
     }
 }
