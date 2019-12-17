@@ -64,13 +64,16 @@ public class TestEmbeddedRedisServerConfig {
         String line;
         StringBuilder pidInfo = new StringBuilder();
 
+        log.info("GREP PROCESS START");
         try (BufferedReader input = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
             while ((line = input.readLine()) != null) {
+                log.info("GREP PROCESS RESULT : {}", line);
                 pidInfo.append(line);
             }
         } catch (Exception e) {
             //
         }
+        log.info("GREP PROCESS END");
 
         return !StringUtils.isEmpty(pidInfo.toString());
     }
