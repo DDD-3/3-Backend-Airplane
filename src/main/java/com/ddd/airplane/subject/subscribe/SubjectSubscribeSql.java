@@ -1,4 +1,4 @@
-package com.ddd.airplane.subject;
+package com.ddd.airplane.subject.subscribe;
 
 class SubjectSubscribeSql {
     static final String FIND = "SELECT subject_id, account_id FROM subject_subscribe WHERE subject_id = ? AND account_id = ?";

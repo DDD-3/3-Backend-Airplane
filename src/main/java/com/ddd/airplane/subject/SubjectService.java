@@ -1,6 +1,7 @@
 package com.ddd.airplane.subject;
 
 import com.ddd.airplane.account.Account;
+import com.ddd.airplane.subject.subscribe.SubjectSubscribeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

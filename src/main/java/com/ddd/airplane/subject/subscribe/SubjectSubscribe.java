@@ -1,4 +1,4 @@
-package com.ddd.airplane.subject;
+package com.ddd.airplane.subject.subscribe;
 
 import lombok.*;
 

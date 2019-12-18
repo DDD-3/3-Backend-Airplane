@@ -1,4 +1,4 @@
-package com.ddd.airplane.subject;
+package com.ddd.airplane.subject.subscribe;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 public class SubjectSubscribeRepository {
     private final JdbcTemplate jdbcTemplate;
 
-    SubjectSubscribe find(Long subjectId, String accountId) {
+    public SubjectSubscribe find(Long subjectId, String accountId) {
         try {
             return jdbcTemplate.queryForObject(
                     SubjectSubscribeSql.FIND,
@@ -25,11 +25,11 @@ public class SubjectSubscribeRepository {
         }
     }
 
-    void replace(Long subjectId, String accountId) {
+    public void replace(Long subjectId, String accountId) {
         jdbcTemplate.update(SubjectSubscribeSql.REPLACE, subjectId, accountId);
     }
 
-    void delete(Long subjectId, String accountId) {
+    public void delete(Long subjectId, String accountId) {
         jdbcTemplate.update(SubjectSubscribeSql.DELETE, subjectId, accountId);
     }
 }
