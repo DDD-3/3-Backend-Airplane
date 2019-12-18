@@ -3,6 +3,8 @@ package com.ddd.airplane.chat.room;
 import com.ddd.airplane.account.Account;
 import com.ddd.airplane.chat.message.MessagePayload;
 import com.ddd.airplane.chat.message.MessagePayloadType;
+import com.ddd.airplane.subject.Subject;
+import com.ddd.airplane.subject.SubjectRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
@@ -12,11 +14,18 @@ import org.springframework.stereotype.Service;
 @Service
 public class RoomService {
     private final RoomRepository roomRepository;
+    private final SubjectRepository subjectRepository;
     private final RedisTemplate redisTemplate;
     private final ChannelTopic roomTopic;
 
-    public Room createRoom(String name) {
-        return roomRepository.save(name);
+    public Room createRoom(String name, String description) {
+        Subject subject = subjectRepository.save(
+                Subject.builder()
+                        .name(name)
+                        .description(description)
+                        .build());
+
+        return roomRepository.save(subject);
     }
 
     public Room getRoom(Long roomId) {

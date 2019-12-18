@@ -11,8 +11,9 @@ DROP TABLE IF EXISTS `room`;
 CREATE TABLE `room`
 (
     `room_id` BIGINT NOT NULL AUTO_INCREMENT,
-    `name` VARCHAR(255) NOT NULL,
-    PRIMARY KEY (`room_id`)
+    `subject_id` BIGINT NOT NULL,
+    PRIMARY KEY (`room_id`),
+    UNIQUE INDEX `unq_room_id_subject_id` (`room_id`, `subject_id`)
 );
 
 DROP TABLE IF EXISTS `message`;
@@ -24,7 +25,17 @@ CREATE TABLE `message`
     `content` VARCHAR(255) NOT NULL,
     `created_at` DATETIME NOT NULL,
     PRIMARY KEY (`message_id`),
-    INDEX `idx_room_id_created_at` (`room_id` ASC, `created_at` DESC)
+    INDEX `idx_room_id_created_at` (`room_id`, `created_at`)
+);
+
+DROP TABLE IF EXISTS `subject`;
+CREATE TABLE `subject`
+(
+    `subject_id` BIGINT NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(64) NOT NULL,
+    `description` VARCHAR(255) NOT NULL,
+    PRIMARY KEY (`subject_id`),
+    INDEX `idx_name` (`name` ASC)
 );
 
 DROP TABLE IF EXISTS `oauth_client_details`;

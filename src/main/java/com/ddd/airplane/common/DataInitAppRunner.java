@@ -49,7 +49,7 @@ public class DataInitAppRunner implements ApplicationRunner {
         );
 
         // room 1
-        Room r1 = roomService.createRoom("r1");
+        Room r1 = roomService.createRoom("호텔 델루나", "호텔 숙박 이야기");
         messageService.createMessage(
                 Message.builder()
                         .roomId(r1.getRoomId())
@@ -66,7 +66,7 @@ public class DataInitAppRunner implements ApplicationRunner {
         );
 
         // room 2
-        Room r2 = roomService.createRoom("r2");
+        Room r2 = roomService.createRoom("효리네 민박", "효리가 밥 만드는 이야기");
         messageService.createMessage(
                 Message.builder()
                         .roomId(r2.getRoomId())

@@ -36,7 +36,7 @@ public class RoomApiControllerTest extends BaseControllerTest {
     @Test
     public void getRoom() throws Exception {
         // Given
-        Room given = roomService.createRoom("sampleRoom");
+        Room given = roomService.createRoom("주제", "설명");
 
         // When & Then
         mockMvc.perform(
@@ -47,7 +47,7 @@ public class RoomApiControllerTest extends BaseControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("roomId").value(given.getRoomId()))
-                .andExpect(jsonPath("name").value(given.getName()));
+                .andExpect(jsonPath("subject.name").value(given.getSubject().getName()));
     }
 
     private String getBearerToken() throws Exception {

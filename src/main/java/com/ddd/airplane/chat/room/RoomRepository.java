@@ -1,5 +1,6 @@
 package com.ddd.airplane.chat.room;
 
+import com.ddd.airplane.subject.Subject;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.redis.core.ValueOperations;
@@ -31,7 +32,13 @@ public class RoomRepository {
                     new Object[]{roomId},
                     (rs, rowNum) -> Room.builder()
                     .roomId(rs.getLong("room_id"))
-                    .name(rs.getString("name"))
+                    .subject(
+                            Subject.builder()
+                                    .subjectId(rs.getLong("subject_id"))
+                                    .name(rs.getString("name"))
+                                    .description(rs.getString("description"))
+                                    .build()
+                    )
                     .userCount(getUserCount(roomId))
                     .build()
             );
@@ -40,14 +47,14 @@ public class RoomRepository {
         }
     }
 
-    Room save(String name) {
+    Room save(Subject subject) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(
                     RoomSql.SAVE,
                     Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, name);
+            ps.setLong(1, subject.getSubjectId());
             return ps;
         }, keyHolder);
 
@@ -57,7 +64,7 @@ public class RoomRepository {
 
         return Room.builder()
                 .roomId(generatedKey.longValue())
-                .name(name)
+                .subject(subject)
                 .userCount(0L)
                 .build();
     }

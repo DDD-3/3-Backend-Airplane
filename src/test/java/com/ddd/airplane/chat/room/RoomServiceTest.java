@@ -12,13 +12,13 @@ public class RoomServiceTest extends BaseServiceTest {
     @Test
     public void getRoom() {
         // given
-        Room given = roomService.createRoom("Hello, Room!");
+        Room given = roomService.createRoom("주제", "설명");
         
         // when
         Room actual = roomService.getRoom(given.getRoomId());
 
         // then
         Assert.assertEquals(given.getRoomId(), actual.getRoomId());
-        Assert.assertEquals(given.getName(), actual.getName());
+        Assert.assertEquals(given.getSubject().getName(), actual.getSubject().getName());
     }
 }
