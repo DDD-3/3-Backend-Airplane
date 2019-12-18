@@ -35,7 +35,15 @@ CREATE TABLE `subject`
     `name` VARCHAR(64) NOT NULL,
     `description` VARCHAR(255) NOT NULL,
     PRIMARY KEY (`subject_id`),
-    INDEX `idx_name` (`name` ASC)
+    INDEX `idx_name` (`name`)
+);
+
+DROP TABLE IF EXISTS `subject_subscribe`;
+CREATE TABLE `subject_subscribe`
+(
+    `subject_id` BIGINT NOT NULL,
+    `account_id` VARCHAR(64) NOT NULL,
+    PRIMARY KEY (`subject_id`, `account_id`)
 );
 
 DROP TABLE IF EXISTS `oauth_client_details`;
