@@ -14,7 +14,7 @@ public class SubjectService {
         return subjectSubscribeRepository.find(subjectId, account.getEmail()) != null;
     }
 
-    void subscribe(Long subjectId, Account account) {
+    public void subscribe(Long subjectId, Account account) {
         subjectSubscribeRepository.replace(subjectId, account.getEmail());
     }
 

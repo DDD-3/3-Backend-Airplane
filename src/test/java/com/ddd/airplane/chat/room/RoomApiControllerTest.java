@@ -1,11 +1,11 @@
 package com.ddd.airplane.chat.room;
 
+import com.ddd.airplane.account.Account;
 import com.ddd.airplane.account.AccountDto;
 import com.ddd.airplane.account.AccountService;
-import com.ddd.airplane.chat.room.Room;
-import com.ddd.airplane.chat.room.RoomService;
 import com.ddd.airplane.common.AppProperties;
 import com.ddd.airplane.common.BaseControllerTest;
+import com.ddd.airplane.subject.SubjectService;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,27 +27,36 @@ public class RoomApiControllerTest extends BaseControllerTest {
     private AppProperties appProperties;
     @Autowired
     private RoomService roomService;
+    @Autowired
+    private SubjectService subjectService;
+
+    private Account account;
+    private String bearerToken;
 
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
         accountService.deleteAll();
+        bearerToken = getBearerToken();
     }
 
     @Test
     public void getRoom() throws Exception {
         // Given
         Room given = roomService.createRoom("주제", "설명");
+        subjectService.subscribe(given.getSubject().getSubjectId(), account);
 
         // When & Then
         mockMvc.perform(
                 get("/api/v1/rooms/{roomId}", given.getRoomId())
-                    .header(HttpHeaders.AUTHORIZATION, getBearerToken())
+                    .header(HttpHeaders.AUTHORIZATION, bearerToken)
         )
 
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("roomId").value(given.getRoomId()))
-                .andExpect(jsonPath("subject.name").value(given.getSubject().getName()));
+                .andExpect(jsonPath("subject.name").value(given.getSubject().getName()))
+                .andExpect(jsonPath("userCount").exists())
+                .andExpect(jsonPath("subscribeCount").value(1));
     }
 
     private String getBearerToken() throws Exception {
@@ -65,7 +74,7 @@ public class RoomApiControllerTest extends BaseControllerTest {
                 .nickname(nickname)
                 .build();
 
-        accountService.createAccount(accountDto);
+        account = accountService.createAccount(accountDto);
 
         ResultActions perform = mockMvc.perform(
                 post("/oauth/token")
