@@ -9,5 +9,4 @@ public class Room {
     private Long roomId;
     private Subject subject;
     private Long userCount;
-    private Long subscribeCount;
 }

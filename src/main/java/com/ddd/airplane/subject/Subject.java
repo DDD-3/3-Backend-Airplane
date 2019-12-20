@@ -12,4 +12,5 @@ public class Subject {
     private String name;
     private String description;
     private List<SubjectSchedule> scheduleList;
+    private Long subscribeCount;
 }

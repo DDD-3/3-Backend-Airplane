@@ -56,14 +56,15 @@ public class RoomApiControllerTest extends BaseControllerTest {
                 get("/api/v1/rooms/{roomId}", given.getRoomId())
                     .header(HttpHeaders.AUTHORIZATION, bearerToken)
         )
-
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("roomId").value(given.getRoomId()))
+                .andExpect(jsonPath("subject.subjectId").value(given.getSubject().getSubjectId()))
                 .andExpect(jsonPath("subject.name").value(given.getSubject().getName()))
+                .andExpect(jsonPath("subject.description").value(given.getSubject().getDescription()))
                 .andExpect(jsonPath("subject.scheduleList", hasSize(2)))
-                .andExpect(jsonPath("userCount").exists())
-                .andExpect(jsonPath("subscribeCount").value(1));
+                .andExpect(jsonPath("subject.subscribeCount").value(1))
+                .andExpect(jsonPath("userCount").exists());
     }
 
     private String getBearerToken() throws Exception {

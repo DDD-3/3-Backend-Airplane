@@ -38,7 +38,6 @@ public class RoomRepository {
                                     .build()
                     )
                     .userCount(getUserCount(roomId))
-                    .subscribeCount(rs.getLong("subscribe_count"))
                     .build()
             );
         } catch (EmptyResultDataAccessException e) {
@@ -64,7 +63,6 @@ public class RoomRepository {
         return Room.builder()
                 .roomId(generatedKey.longValue())
                 .userCount(0L)
-                .subscribeCount(0L)
                 .build();
     }
 

@@ -25,6 +25,14 @@ public class SubjectSubscribeRepository {
         }
     }
 
+    public Long selectSubScribeCount(Long subjectId) {
+        return jdbcTemplate.queryForObject(
+                SubjectSubscribeSql.SELECT_SUBSCRIBE_COUNT,
+                new Object[]{subjectId},
+                ((rs, rowNum) -> rs.getLong("subscribe_count"))
+        );
+    }
+
     public void replace(Long subjectId, String accountId) {
         jdbcTemplate.update(SubjectSubscribeSql.REPLACE, subjectId, accountId);
     }

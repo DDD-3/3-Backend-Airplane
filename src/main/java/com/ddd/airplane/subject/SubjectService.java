@@ -13,11 +13,28 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class SubjectService {
+    private final SubjectRepository subjectRepository;
     private final SubjectSubscribeRepository subjectSubscribeRepository;
     private final SubjectScheduleRepository subjectScheduleRepository;
 
+    public Subject getSubject(Long subjectId) {
+        Subject subject = subjectRepository.findById(subjectId);
+        subject.setScheduleList(getSchedules(subjectId));
+        subject.setSubscribeCount(getSubscribeCount(subjectId));
+
+        return subject;
+    }
+
+    public Subject createSubject(Subject subject) {
+        return subjectRepository.save(subject);
+    }
+
     List<SubjectSchedule> getSchedules(Long subjectId) {
         return subjectScheduleRepository.findBySubjectId(subjectId);
+    }
+
+    private Long getSubscribeCount(Long subjectId) {
+        return subjectSubscribeRepository.selectSubScribeCount(subjectId);
     }
 
     public void addSchedule(Long subjectId, LocalDateTime startAt, LocalDateTime endAt) {
