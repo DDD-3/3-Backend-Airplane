@@ -35,8 +35,6 @@ public class RoomRepository {
                     .subject(
                             Subject.builder()
                                     .subjectId(rs.getLong("subject_id"))
-                                    .name(rs.getString("name"))
-                                    .description(rs.getString("description"))
                                     .build()
                     )
                     .userCount(getUserCount(roomId))
@@ -65,7 +63,6 @@ public class RoomRepository {
 
         return Room.builder()
                 .roomId(generatedKey.longValue())
-                .subject(subject)
                 .userCount(0L)
                 .subscribeCount(0L)
                 .build();

@@ -16,7 +16,6 @@ import java.util.List;
 public class RoomApiController {
     private final RoomService roomService;
 
-    // TODO : 채팅방 정보 => 주제의 일정
     @GetMapping("/v1/rooms/{roomId}")
     @ResponseStatus(HttpStatus.OK)
     public Room getRoom(

@@ -25,11 +25,18 @@ public class RoomService {
                         .description(description)
                         .build());
 
-        return roomRepository.save(subject);
+        Room room = roomRepository.save(subject);
+        room.setSubject(subject);
+
+        return room;
     }
 
     public Room getRoom(Long roomId) {
-        return roomRepository.findById(roomId);
+        Room room = roomRepository.findById(roomId);
+        Subject subject = subjectRepository.findById(room.getSubject().getSubjectId());
+        room.setSubject(subject);
+
+        return room;
     }
 
     public void joinRoom(Room room, Account account) {

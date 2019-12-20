@@ -13,6 +13,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.security.oauth2.common.util.Jackson2JsonParser;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.time.LocalDateTime;
+
+import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -44,6 +47,9 @@ public class RoomApiControllerTest extends BaseControllerTest {
         // Given
         Room given = roomService.createRoom("주제", "설명");
         subjectService.subscribe(given.getSubject().getSubjectId(), account);
+        LocalDateTime now = LocalDateTime.now();
+        subjectService.addSchedule(given.getSubject().getSubjectId(), now.minusHours(2), now.plusHours(2));
+        subjectService.addSchedule(given.getSubject().getSubjectId(), now.plusDays(1), now.plusDays(2));
 
         // When & Then
         mockMvc.perform(
@@ -55,6 +61,7 @@ public class RoomApiControllerTest extends BaseControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("roomId").value(given.getRoomId()))
                 .andExpect(jsonPath("subject.name").value(given.getSubject().getName()))
+                .andExpect(jsonPath("subject.scheduleList", hasSize(2)))
                 .andExpect(jsonPath("userCount").exists())
                 .andExpect(jsonPath("subscribeCount").value(1));
     }
