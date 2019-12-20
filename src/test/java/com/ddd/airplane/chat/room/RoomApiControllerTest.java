@@ -3,6 +3,8 @@ package com.ddd.airplane.chat.room;
 import com.ddd.airplane.account.Account;
 import com.ddd.airplane.account.AccountDto;
 import com.ddd.airplane.account.AccountService;
+import com.ddd.airplane.chat.message.Message;
+import com.ddd.airplane.chat.message.MessageService;
 import com.ddd.airplane.common.AppProperties;
 import com.ddd.airplane.common.BaseControllerTest;
 import com.ddd.airplane.subject.SubjectService;
@@ -32,6 +34,8 @@ public class RoomApiControllerTest extends BaseControllerTest {
     private RoomService roomService;
     @Autowired
     private SubjectService subjectService;
+    @Autowired
+    private MessageService messageService;
 
     private Account account;
     private String bearerToken;
@@ -67,14 +71,12 @@ public class RoomApiControllerTest extends BaseControllerTest {
                 .andExpect(jsonPath("userCount").exists());
     }
 
-
-
     @Test
     public void getSubscribedRooms() throws Exception {
         // Given
-        Room given = roomService.createRoom("주제2", "설명2");
-        Room given2 = roomService.createRoom("주제3", "설명2");
-        Room given3 = roomService.createRoom("주제4", "설명2");
+        Room given = generateRoom(1);
+        Room given2 = generateRoom(2);
+        Room given3 = generateRoom(3);
         subjectService.subscribe(given.getSubject().getSubjectId(), account);
         subjectService.subscribe(given2.getSubject().getSubjectId(), account);
         subjectService.subscribe(given3.getSubject().getSubjectId(), account);
@@ -85,6 +87,48 @@ public class RoomApiControllerTest extends BaseControllerTest {
         // When & Then
         mockMvc.perform(
                 get("/api//v1/roomsOfSubscribedSubjects")
+                        .param("pageNum", String.valueOf(1))
+                        .param("pageSize", String.valueOf(2))
+                        .header(HttpHeaders.AUTHORIZATION, bearerToken)
+        )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.items").value(hasSize(2)))
+                .andExpect(jsonPath("$.items[0].roomId").exists())
+                .andExpect(jsonPath("$.items[0].subject.subjectId").exists())
+                .andExpect(jsonPath("$.items[0].subject.name").exists())
+                .andExpect(jsonPath("$.items[0].subject.description").exists())
+                .andExpect(jsonPath("$.items[0].subject.scheduleList").exists())
+                .andExpect(jsonPath("$.items[0].subject.subscribeCount").exists())
+                .andExpect(jsonPath("$.items[0].userCount").exists())
+                .andExpect(jsonPath("$.pageInfo.pageNum").value(1))
+                .andExpect(jsonPath("$.pageInfo.pageSize").value(2));
+    }
+
+
+    @Test
+    public void getRecentMessagedRooms() throws Exception {
+        // Given
+        Room given = generateRoom(4);
+        Room given2 = generateRoom(5);
+        Room given3 = generateRoom(6);
+
+        subjectService.subscribe(given.getSubject().getSubjectId(), account);
+        subjectService.subscribe(given2.getSubject().getSubjectId(), account);
+        subjectService.subscribe(given3.getSubject().getSubjectId(), account);
+
+        LocalDateTime now = LocalDateTime.now();
+        subjectService.addSchedule(given.getSubject().getSubjectId(), now.minusHours(2), now.plusHours(2));
+        subjectService.addSchedule(given.getSubject().getSubjectId(), now.plusDays(1), now.plusDays(2));
+
+        messageService.createMessage(Message.builder().roomId(given.getRoomId()).senderId(account.getEmail()).content("1-1").build());
+        messageService.createMessage(Message.builder().roomId(given.getRoomId()).senderId(account.getEmail()).content("1-2").build());
+        messageService.createMessage(Message.builder().roomId(given.getRoomId()).senderId(account.getEmail()).content("1-3").build());
+        messageService.createMessage(Message.builder().roomId(given3.getRoomId()).senderId(account.getEmail()).content("3-1").build());
+
+        // When & Then
+        mockMvc.perform(
+                get("/api//v1/recentMessagedRooms")
                         .param("pageNum", String.valueOf(1))
                         .param("pageSize", String.valueOf(2))
                         .header(HttpHeaders.AUTHORIZATION, bearerToken)
@@ -133,4 +177,7 @@ public class RoomApiControllerTest extends BaseControllerTest {
         return parser.parseMap(responseBody).get("access_token").toString();
     }
 
+    private Room generateRoom(int index) {
+        return roomService.createRoom("Room " + index, "description " + index);
+    }
 }

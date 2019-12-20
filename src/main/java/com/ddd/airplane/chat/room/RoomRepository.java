@@ -1,6 +1,5 @@
 package com.ddd.airplane.chat.room;
 
-import com.ddd.airplane.account.Account;
 import com.ddd.airplane.common.PageInfo;
 import com.ddd.airplane.subject.Subject;
 import lombok.RequiredArgsConstructor;
@@ -53,6 +52,30 @@ public class RoomRepository {
             return jdbcTemplate.query(
                     RoomSql.SELECT_SUBSCRIBED_ROOMS,
                     new Object[]{accountId, pageInfo.getLimit(), pageInfo.getOffset()},
+                    (rs, rowNum) -> {
+                        Long  roomId = rs.getLong("room_id");
+
+                        return Room.builder()
+                                .roomId(roomId)
+                                .subject(
+                                        Subject.builder()
+                                                .subjectId(rs.getLong("subject_id"))
+                                                .build()
+                                )
+                                .userCount(getUserCount(roomId))
+                                .build();
+                    }
+            );
+        } catch (EmptyResultDataAccessException e) {
+            return List.of();
+        }
+    }
+
+    List<Room> selectRecentMessagedRooms(String accountId, PageInfo pageInfo) {
+        try {
+            return jdbcTemplate.query(
+                    RoomSql.SELECT_RECENT_MESSAGED_ROOMS,
+                    new Object[]{accountId, accountId, pageInfo.getLimit(), pageInfo.getOffset()},
                     (rs, rowNum) -> {
                         Long  roomId = rs.getLong("room_id");
 

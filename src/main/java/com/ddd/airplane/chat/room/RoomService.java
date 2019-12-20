@@ -49,6 +49,13 @@ public class RoomService {
         return rooms;
     }
 
+    List<Room> getRecentMessagedRooms(Account account, PageInfo pageInfo) {
+        List<Room> rooms = roomRepository.selectRecentMessagedRooms(account.getEmail(), pageInfo);
+        rooms.forEach(r -> r.setSubject(subjectService.getSubject(r.getSubject().getSubjectId())));
+
+        return rooms;
+    }
+
     public void joinRoom(Room room, Account account) {
         Long userCount = roomRepository.incrementUserCount(room.getRoomId());
 

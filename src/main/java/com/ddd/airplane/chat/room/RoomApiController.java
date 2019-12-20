@@ -33,8 +33,18 @@ public class RoomApiController {
             @CurrentAccount Account account,
             PageInfo pageInfo
     ) {
-        List<Room> subscribedRooms = roomService.getSubscribedRooms(account, pageInfo);
-        return new PageContent<>(subscribedRooms, pageInfo);
+        List<Room> rooms = roomService.getSubscribedRooms(account, pageInfo);
+        return new PageContent<>(rooms, pageInfo);
+    }
+
+    @GetMapping("/v1/recentMessagedRooms")
+    @ResponseStatus(HttpStatus.OK)
+    public PageContent<Room> getRecentMessagedRooms(
+            @CurrentAccount Account account,
+            PageInfo pageInfo
+    ) {
+        List<Room> rooms = roomService.getRecentMessagedRooms(account, pageInfo);
+        return new PageContent<>(rooms, pageInfo);
     }
 
     // TODO : 많이 참여한 채팅방
