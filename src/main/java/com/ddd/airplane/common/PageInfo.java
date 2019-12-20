@@ -1,15 +1,12 @@
 package com.ddd.airplane.common;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.Data;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
-@Getter
-@NoArgsConstructor  @AllArgsConstructor
+@Data
 public class PageInfo {
     @Min(1)
     private Integer pageNum = 1;
