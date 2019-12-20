@@ -3,6 +3,8 @@ package com.ddd.airplane.chat.room;
 import com.ddd.airplane.account.Account;
 import com.ddd.airplane.account.CurrentAccount;
 import com.ddd.airplane.chat.message.Message;
+import com.ddd.airplane.common.PageContent;
+import com.ddd.airplane.common.PageInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -25,14 +27,14 @@ public class RoomApiController {
         return roomService.getRoom(roomId);
     }
 
-    // TODO : page
     @GetMapping("/v1/roomsOfSubscribedSubjects")
     @ResponseStatus(HttpStatus.OK)
-    public List<Room> getSubscribedRooms(
+    public PageContent<Room> getSubscribedRooms(
             @CurrentAccount Account account,
-            Pageable pageable
+            PageInfo pageInfo
     ) {
-        return roomService.getSubscribedRooms(account);
+        List<Room> subscribedRooms = roomService.getSubscribedRooms(account, pageInfo);
+        return new PageContent<>(subscribedRooms, pageInfo);
     }
 
     // TODO : 많이 참여한 채팅방

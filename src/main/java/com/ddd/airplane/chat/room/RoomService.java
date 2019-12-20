@@ -3,6 +3,7 @@ package com.ddd.airplane.chat.room;
 import com.ddd.airplane.account.Account;
 import com.ddd.airplane.chat.message.MessagePayload;
 import com.ddd.airplane.chat.message.MessagePayloadType;
+import com.ddd.airplane.common.PageInfo;
 import com.ddd.airplane.subject.Subject;
 import com.ddd.airplane.subject.SubjectService;
 import lombok.RequiredArgsConstructor;
@@ -41,8 +42,8 @@ public class RoomService {
         return room;
     }
 
-    List<Room> getSubscribedRooms(Account account) {
-        List<Room> rooms = roomRepository.selectSubscribedRooms(account.getEmail());
+    List<Room> getSubscribedRooms(Account account, PageInfo pageInfo) {
+        List<Room> rooms = roomRepository.selectSubscribedRooms(account.getEmail(), pageInfo);
         rooms.forEach(r -> r.setSubject(subjectService.getSubject(r.getSubject().getSubjectId())));
 
         return rooms;

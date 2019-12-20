@@ -15,7 +15,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.time.LocalDateTime;
 
-import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -73,7 +73,11 @@ public class RoomApiControllerTest extends BaseControllerTest {
     public void getSubscribedRooms() throws Exception {
         // Given
         Room given = roomService.createRoom("주제2", "설명2");
+        Room given2 = roomService.createRoom("주제3", "설명2");
+        Room given3 = roomService.createRoom("주제4", "설명2");
         subjectService.subscribe(given.getSubject().getSubjectId(), account);
+        subjectService.subscribe(given2.getSubject().getSubjectId(), account);
+        subjectService.subscribe(given3.getSubject().getSubjectId(), account);
         LocalDateTime now = LocalDateTime.now();
         subjectService.addSchedule(given.getSubject().getSubjectId(), now.minusHours(2), now.plusHours(2));
         subjectService.addSchedule(given.getSubject().getSubjectId(), now.plusDays(1), now.plusDays(2));
@@ -81,17 +85,22 @@ public class RoomApiControllerTest extends BaseControllerTest {
         // When & Then
         mockMvc.perform(
                 get("/api//v1/roomsOfSubscribedSubjects")
+                        .param("pageNum", String.valueOf(1))
+                        .param("pageSize", String.valueOf(2))
                         .header(HttpHeaders.AUTHORIZATION, bearerToken)
         )
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].roomId").value(given.getRoomId()))
-                .andExpect(jsonPath("$[0].subject.subjectId").value(given.getSubject().getSubjectId()))
-                .andExpect(jsonPath("$[0].subject.name").value(given.getSubject().getName()))
-                .andExpect(jsonPath("$[0].subject.description").value(given.getSubject().getDescription()))
-                .andExpect(jsonPath("$[0].subject.scheduleList", hasSize(2)))
-                .andExpect(jsonPath("$[0].subject.subscribeCount").value(1))
-                .andExpect(jsonPath("$[0].userCount").exists());
+                .andExpect(jsonPath("$.items").value(hasSize(2)))
+                .andExpect(jsonPath("$.items[0].roomId").exists())
+                .andExpect(jsonPath("$.items[0].subject.subjectId").exists())
+                .andExpect(jsonPath("$.items[0].subject.name").exists())
+                .andExpect(jsonPath("$.items[0].subject.description").exists())
+                .andExpect(jsonPath("$.items[0].subject.scheduleList").exists())
+                .andExpect(jsonPath("$.items[0].subject.subscribeCount").exists())
+                .andExpect(jsonPath("$.items[0].userCount").exists())
+                .andExpect(jsonPath("$.pageInfo.pageNum").value(1))
+                .andExpect(jsonPath("$.pageInfo.pageSize").value(2));
     }
 
     private String getBearerToken() throws Exception {

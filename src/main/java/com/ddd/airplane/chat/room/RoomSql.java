@@ -15,7 +15,8 @@ class RoomSql {
             "FROM room r " +
             "INNER JOIN subject_subscribe ss ON r.subject_id = ss.subject_id " +
             "WHERE ss.account_id = ? " +
-            "ORDER BY ss.subscribe_at DESC";
+            "ORDER BY ss.subscribe_at DESC " +
+            "LIMIT ? OFFSET ?";
 
     static final String SAVE = "INSERT INTO room (subject_id) VALUES (?)";
 }
