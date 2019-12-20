@@ -4,12 +4,13 @@ import com.ddd.airplane.account.Account;
 import com.ddd.airplane.chat.message.MessagePayload;
 import com.ddd.airplane.chat.message.MessagePayloadType;
 import com.ddd.airplane.subject.Subject;
-import com.ddd.airplane.subject.SubjectRepository;
 import com.ddd.airplane.subject.SubjectService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -38,6 +39,13 @@ public class RoomService {
         room.setSubject(subject);
 
         return room;
+    }
+
+    List<Room> getSubscribedRooms(Account account) {
+        List<Room> rooms = roomRepository.selectSubscribedRooms(account.getEmail());
+        rooms.forEach(r -> r.setSubject(subjectService.getSubject(r.getSubject().getSubjectId())));
+
+        return rooms;
     }
 
     public void joinRoom(Room room, Account account) {

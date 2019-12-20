@@ -40,15 +40,4 @@ public class AccountApiController {
     ) {
         return List.of();
     }
-
-    // TODO : 구독한 주제의 채팅방 목록
-    @GetMapping("/v1/accounts/{email}/roomsOfSubscribedSubjects")
-    @ResponseStatus(HttpStatus.OK)
-    public List<Room> getSubscribedRooms(
-            @PathVariable String email,
-            @CurrentAccount Account account,
-            Pageable pageable
-    ) {
-        return List.of();
-    }
 }

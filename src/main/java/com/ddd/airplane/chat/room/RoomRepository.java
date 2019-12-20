@@ -1,5 +1,6 @@
 package com.ddd.airplane.chat.room;
 
+import com.ddd.airplane.account.Account;
 import com.ddd.airplane.subject.Subject;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -13,6 +14,7 @@ import javax.annotation.Resource;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.text.MessageFormat;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -42,6 +44,30 @@ public class RoomRepository {
             );
         } catch (EmptyResultDataAccessException e) {
             return null;
+        }
+    }
+
+    List<Room> selectSubscribedRooms(String accountId) {
+        try {
+            return jdbcTemplate.query(
+                    RoomSql.SELECT_SUBSCRIBED_ROOMS,
+                    new Object[]{accountId},
+                    (rs, rowNum) -> {
+                        Long  roomId = rs.getLong("room_id");
+
+                        return Room.builder()
+                                .roomId(roomId)
+                                .subject(
+                                        Subject.builder()
+                                                .subjectId(rs.getLong("subject_id"))
+                                                .build()
+                                )
+                                .userCount(getUserCount(roomId))
+                                .build();
+                    }
+            );
+        } catch (EmptyResultDataAccessException e) {
+            return List.of();
         }
     }
 

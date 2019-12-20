@@ -43,6 +43,7 @@ CREATE TABLE `subject_subscribe`
 (
     `subject_id` BIGINT NOT NULL,
     `account_id` VARCHAR(64) NOT NULL,
+    `subscribe_at` DATETIME NOT NULL,
     PRIMARY KEY (`subject_id`, `account_id`)
 );
 

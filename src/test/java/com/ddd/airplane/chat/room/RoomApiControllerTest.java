@@ -67,6 +67,33 @@ public class RoomApiControllerTest extends BaseControllerTest {
                 .andExpect(jsonPath("userCount").exists());
     }
 
+
+
+    @Test
+    public void getSubscribedRooms() throws Exception {
+        // Given
+        Room given = roomService.createRoom("주제2", "설명2");
+        subjectService.subscribe(given.getSubject().getSubjectId(), account);
+        LocalDateTime now = LocalDateTime.now();
+        subjectService.addSchedule(given.getSubject().getSubjectId(), now.minusHours(2), now.plusHours(2));
+        subjectService.addSchedule(given.getSubject().getSubjectId(), now.plusDays(1), now.plusDays(2));
+
+        // When & Then
+        mockMvc.perform(
+                get("/api//v1/roomsOfSubscribedSubjects")
+                        .header(HttpHeaders.AUTHORIZATION, bearerToken)
+        )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].roomId").value(given.getRoomId()))
+                .andExpect(jsonPath("$[0].subject.subjectId").value(given.getSubject().getSubjectId()))
+                .andExpect(jsonPath("$[0].subject.name").value(given.getSubject().getName()))
+                .andExpect(jsonPath("$[0].subject.description").value(given.getSubject().getDescription()))
+                .andExpect(jsonPath("$[0].subject.scheduleList", hasSize(2)))
+                .andExpect(jsonPath("$[0].subject.subscribeCount").value(1))
+                .andExpect(jsonPath("$[0].userCount").exists());
+    }
+
     private String getBearerToken() throws Exception {
         return "Bearer " + getAccessToken();
     }

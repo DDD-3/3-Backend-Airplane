@@ -4,10 +4,10 @@ import com.ddd.airplane.account.Account;
 import com.ddd.airplane.account.CurrentAccount;
 import com.ddd.airplane.chat.message.Message;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.awt.print.Pageable;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -23,6 +23,16 @@ public class RoomApiController {
             @CurrentAccount Account account
     ) {
         return roomService.getRoom(roomId);
+    }
+
+    // TODO : page
+    @GetMapping("/v1/roomsOfSubscribedSubjects")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Room> getSubscribedRooms(
+            @CurrentAccount Account account,
+            Pageable pageable
+    ) {
+        return roomService.getSubscribedRooms(account);
     }
 
     // TODO : 많이 참여한 채팅방
