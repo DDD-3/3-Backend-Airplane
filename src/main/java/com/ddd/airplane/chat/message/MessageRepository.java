@@ -36,7 +36,7 @@ public class MessageRepository {
                 .roomId(message.getRoomId())
                 .senderId(message.getSenderId())
                 .content(message.getContent())
-                .createdAt(new Date())
+                .createAt(new Date())
                 .build();
     }
 }

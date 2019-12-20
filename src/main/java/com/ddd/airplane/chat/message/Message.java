@@ -11,5 +11,5 @@ public class Message {
     private Long roomId;
     private String senderId;
     private String content;
-    private Date createdAt;
+    private Date createAt;
 }

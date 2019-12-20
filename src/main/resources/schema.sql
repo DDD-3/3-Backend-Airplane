@@ -23,9 +23,9 @@ CREATE TABLE `message`
     `room_id` BIGINT NOT NULL,
     `sender_id` VARCHAR(64) NOT NULL,
     `content` VARCHAR(255) NOT NULL,
-    `created_at` DATETIME NOT NULL,
+    `create_at` DATETIME NOT NULL,
     PRIMARY KEY (`message_id`),
-    INDEX `idx_room_id_created_at` (`room_id`, `created_at`)
+    INDEX `idx_room_id_create_at` (`room_id`, `create_at`)
 );
 
 DROP TABLE IF EXISTS `subject`;
