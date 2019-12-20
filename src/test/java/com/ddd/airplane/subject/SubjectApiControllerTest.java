@@ -1,76 +1,83 @@
-package com.ddd.airplane.config;
+package com.ddd.airplane.subject;
 
+import com.ddd.airplane.account.Account;
 import com.ddd.airplane.account.AccountDto;
 import com.ddd.airplane.account.AccountService;
+import com.ddd.airplane.chat.room.Room;
+import com.ddd.airplane.chat.room.RoomService;
 import com.ddd.airplane.common.AppProperties;
 import com.ddd.airplane.common.BaseControllerTest;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.oauth2.common.util.Jackson2JsonParser;
 import org.springframework.test.web.servlet.ResultActions;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class AuthServerConfigTest extends BaseControllerTest {
+public class SubjectApiControllerTest extends BaseControllerTest {
     @Autowired
     private AccountService accountService;
     @Autowired
     private AppProperties appProperties;
+    @Autowired
+    private RoomService roomService;
+    @Autowired
+    private SubjectService subjectService;
+
+    private Account account;
+    private String bearerToken;
 
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
         accountService.deleteAll();
+        bearerToken = getBearerToken();
     }
 
     @Test
-    public void getAuthToken() throws Exception {
+    public void subscribeSubject() throws Exception {
         // Given
-        String email = "y2o2u2n@gmail.com";
-        String password = "password";
-        String nickname = "y2o2u2n";
+        Room given = roomService.createRoom("주제", "설명");
 
-        AccountDto accountDto = AccountDto.builder()
-                .email(email)
-                .password(password)
-                .nickname(nickname)
-                .build();
-
-        accountService.createAccount(accountDto);
-
+        // When & Then
         mockMvc.perform(
-                post("/oauth/token")
-                        .with(httpBasic(appProperties.getClientId(), appProperties.getClientSecret()))
-                        .param("username", email)
-                        .param("password", password)
-                        .param("grant_type", "password")
+                post("/api/v1/subjects/{subjectId}/subscribe", given.getSubject().getSubjectId())
+                        .header(HttpHeaders.AUTHORIZATION, bearerToken)
         )
                 .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("access_token").exists());
+                .andExpect(status().isCreated());
+
+        Assert.assertTrue(subjectService.subscribed(given.getSubject().getSubjectId(), account));
     }
 
     @Test
-    public void getAuthToken_using_refreshToken() throws Exception {
-        String refreshToken = getRefreshToken();
+    public void unsubscribeSubject() throws Exception {
+        // Given
+        Room given = roomService.createRoom("주제", "설명");
+        subjectService.subscribe(given.getSubject().getSubjectId(), account);
 
+        // When & Then
         mockMvc.perform(
-                post("/oauth/token")
-                        .with(httpBasic(appProperties.getClientId(), appProperties.getClientSecret()))
-                        .param("grant_type", "refresh_token")
-                        .param("refresh_token", refreshToken)
+                delete("/api/v1/subjects/{subjectId}/subscribe", given.getSubject().getSubjectId())
+                        .header(HttpHeaders.AUTHORIZATION, bearerToken)
         )
                 .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("access_token").exists())
-                .andExpect(jsonPath("refresh_token").value(refreshToken));
+                .andExpect(status().isNoContent());
+
+        Assert.assertFalse(subjectService.subscribed(given.getSubject().getSubjectId(), account));
     }
 
-    private String getRefreshToken() throws Exception {
+    private String getBearerToken() throws Exception {
+        return "Bearer " + getAccessToken();
+    }
+
+    private String getAccessToken() throws Exception {
         String email = "sample@gmail.com";
         String password = "password";
         String nickname = "sample";
@@ -81,7 +88,7 @@ public class AuthServerConfigTest extends BaseControllerTest {
                 .nickname(nickname)
                 .build();
 
-        accountService.createAccount(accountDto);
+        account = accountService.createAccount(accountDto);
 
         ResultActions perform = mockMvc.perform(
                 post("/oauth/token")
@@ -93,6 +100,6 @@ public class AuthServerConfigTest extends BaseControllerTest {
 
         String responseBody = perform.andReturn().getResponse().getContentAsString();
         Jackson2JsonParser parser = new Jackson2JsonParser();
-        return parser.parseMap(responseBody).get("refresh_token").toString();
+        return parser.parseMap(responseBody).get("access_token").toString();
     }
 }

@@ -1,10 +1,62 @@
-DROP TABLE IF EXISTS `accounts`;
-CREATE TABLE `accounts`
+DROP TABLE IF EXISTS `account`;
+CREATE TABLE `account`
 (
-    `email`    varchar(64)  NOT NULL,
-    `password` varchar(128) NOT NULL,
-    `nickname` varchar(32)  NOT NULL,
+    `email`    VARCHAR(64)  NOT NULL,
+    `password` VARCHAR(128) NOT NULL,
+    `nickname` VARCHAR(32)  NOT NULL,
     PRIMARY KEY (`email`)
+);
+
+DROP TABLE IF EXISTS `room`;
+CREATE TABLE `room`
+(
+    `room_id` BIGINT NOT NULL AUTO_INCREMENT,
+    `subject_id` BIGINT NOT NULL,
+    PRIMARY KEY (`room_id`),
+    UNIQUE INDEX `unq_room_id_subject_id` (`room_id`, `subject_id`)
+);
+
+DROP TABLE IF EXISTS `message`;
+CREATE TABLE `message`
+(
+    `message_id` BIGINT NOT NULL AUTO_INCREMENT,
+    `room_id` BIGINT NOT NULL,
+    `sender_id` VARCHAR(64) NOT NULL,
+    `content` VARCHAR(255) NOT NULL,
+    `create_at` DATETIME NOT NULL,
+    PRIMARY KEY (`message_id`),
+    INDEX `idx_room_id_create_at` (`room_id`, `create_at`)
+);
+
+DROP TABLE IF EXISTS `subject`;
+CREATE TABLE `subject`
+(
+    `subject_id` BIGINT NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(64) NOT NULL,
+    `description` VARCHAR(255) NOT NULL,
+    PRIMARY KEY (`subject_id`),
+    INDEX `idx_name` (`name`)
+);
+
+DROP TABLE IF EXISTS `subject_subscribe`;
+CREATE TABLE `subject_subscribe`
+(
+    `subject_id` BIGINT NOT NULL,
+    `account_id` VARCHAR(64) NOT NULL,
+    `subscribe_at` DATETIME NOT NULL,
+    PRIMARY KEY (`subject_id`, `account_id`)
+);
+
+DROP TABLE IF EXISTS `subject_schedule`;
+CREATE TABLE `subject_schedule`
+(
+    `schedule_id` BIGINT NOT NULL AUTO_INCREMENT,
+    `subject_id` BIGINT NOT NULL,
+    `start_at` DATETIME NOT NULL,
+    `end_at` DATETIME NOT NULL,
+    PRIMARY KEY (`schedule_id`),
+    INDEX `idx_subject_id` (`subject_id`),
+    UNIQUE INDEX `unq_subject_id_start_at_end_at` (`subject_id`, `start_at`, `end_at`)
 );
 
 DROP TABLE IF EXISTS `oauth_client_details`;
