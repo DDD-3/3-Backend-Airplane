@@ -46,6 +46,18 @@ CREATE TABLE `subject_subscribe`
     PRIMARY KEY (`subject_id`, `account_id`)
 );
 
+DROP TABLE IF EXISTS `subject_schedule`;
+CREATE TABLE `subject_schedule`
+(
+    `schedule_id` BIGINT NOT NULL AUTO_INCREMENT,
+    `subject_id` BIGINT NOT NULL,
+    `start_at` DATETIME NOT NULL,
+    `end_at` DATETIME NOT NULL,
+    PRIMARY KEY (`schedule_id`),
+    INDEX `idx_subject_id` (`subject_id`),
+    UNIQUE INDEX `unq_subject_id_start_at_end_at` (`subject_id`, `start_at`, `end_at`)
+);
+
 DROP TABLE IF EXISTS `oauth_client_details`;
 CREATE TABLE `oauth_client_details`
 (
