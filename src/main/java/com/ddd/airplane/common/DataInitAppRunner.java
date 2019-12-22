@@ -61,6 +61,8 @@ public class DataInitAppRunner implements ApplicationRunner {
         messageService.createMessage(Message.builder().roomId(room1.getRoomId()).senderId(abc.getEmail()).content("abc, room 1, message 1").build());
         messageService.createMessage(Message.builder().roomId(room1.getRoomId()).senderId(def.getEmail()).content("def, Room 1, message 1").build());
         messageService.createMessage(Message.builder().roomId(room1.getRoomId()).senderId(abc.getEmail()).content("abc, room 1, message 2").build());
+        messageService.createMessage(Message.builder().roomId(room1.getRoomId()).senderId(def.getEmail()).content("def, room 1, message 2").build());
+        messageService.createMessage(Message.builder().roomId(room1.getRoomId()).senderId(abc.getEmail()).content("abc, room 1, message 3").build());
 
         messageService.createMessage(Message.builder().roomId(room2.getRoomId()).senderId(ghi.getEmail()).content("ghi, room 2, message 1").build());
 

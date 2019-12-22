@@ -3,6 +3,8 @@ package com.ddd.airplane.chat.room;
 import com.ddd.airplane.account.Account;
 import com.ddd.airplane.account.CurrentAccount;
 import com.ddd.airplane.chat.message.Message;
+import com.ddd.airplane.chat.message.MessageGetCriteria;
+import com.ddd.airplane.chat.message.MessageService;
 import com.ddd.airplane.common.PageContent;
 import com.ddd.airplane.common.PageInfo;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,7 @@ import java.util.List;
 @RequestMapping("/api")
 public class RoomApiController {
     private final RoomService roomService;
+    private final MessageService messageService;
 
     @GetMapping("/v1/rooms/{roomId}")
     @ResponseStatus(HttpStatus.OK)
@@ -67,14 +70,14 @@ public class RoomApiController {
         return List.of();
     }
 
-    // TODO : 특정 채팅방 내 메세지 조회
     @GetMapping("/v1/rooms/{roomId}/messages")
     @ResponseStatus(HttpStatus.OK)
     public List<Message> getMessages(
-            @PathVariable String roomId,
-            Pageable pageable,
+            @PathVariable Long roomId,
+            MessageGetCriteria criteria,
             @CurrentAccount Account account
     ) {
-        return List.of();
+        criteria.setRoomId(roomId);
+        return messageService.getMessagesInRoom(criteria);
     }
 }

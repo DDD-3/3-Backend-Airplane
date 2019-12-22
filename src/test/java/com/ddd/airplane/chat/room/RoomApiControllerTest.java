@@ -4,6 +4,7 @@ import com.ddd.airplane.account.Account;
 import com.ddd.airplane.account.AccountDto;
 import com.ddd.airplane.account.AccountService;
 import com.ddd.airplane.chat.message.Message;
+import com.ddd.airplane.chat.message.MessageGetDirection;
 import com.ddd.airplane.chat.message.MessageService;
 import com.ddd.airplane.common.AppProperties;
 import com.ddd.airplane.common.BaseControllerTest;
@@ -17,7 +18,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.time.LocalDateTime;
 
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -58,7 +59,7 @@ public class RoomApiControllerTest extends BaseControllerTest {
         // When & Then
         mockMvc.perform(
                 get("/api/v1/rooms/{roomId}", given.getRoomId())
-                    .header(HttpHeaders.AUTHORIZATION, bearerToken)
+                        .header(HttpHeaders.AUTHORIZATION, bearerToken)
         )
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -69,6 +70,52 @@ public class RoomApiControllerTest extends BaseControllerTest {
                 .andExpect(jsonPath("subject.scheduleList", hasSize(2)))
                 .andExpect(jsonPath("subject.subscribeCount").value(1))
                 .andExpect(jsonPath("userCount").exists());
+    }
+
+    @Test
+    public void getMessages_backward() throws Exception {
+        // Given
+        Room room = generateRoom(1);
+        Message message1 = messageService.createMessage(Message.builder().roomId(room.getRoomId()).senderId(account.getEmail()).content("1").build());
+        Message message2 = messageService.createMessage(Message.builder().roomId(room.getRoomId()).senderId(account.getEmail()).content("2").build());
+        Message message3 = messageService.createMessage(Message.builder().roomId(room.getRoomId()).senderId(account.getEmail()).content("3").build());
+        Message message4 = messageService.createMessage(Message.builder().roomId(room.getRoomId()).senderId(account.getEmail()).content("4").build());
+        Message message5 = messageService.createMessage(Message.builder().roomId(room.getRoomId()).senderId(account.getEmail()).content("5").build());
+
+        // When & Then
+        mockMvc.perform(
+                get("/api/v1/rooms/{roomId}/messages", room.getRoomId())
+                        .param("baseMessageId", String.valueOf(message4.getMessageId()))
+                        .param("size", String.valueOf(2))
+                        .param("direction", MessageGetDirection.BACKWARD.name())
+                        .header(HttpHeaders.AUTHORIZATION, bearerToken)
+        )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)));
+    }
+
+    @Test
+    public void getMessages_forward() throws Exception {
+        // Given
+        Room room = generateRoom(1);
+        Message message1 = messageService.createMessage(Message.builder().roomId(room.getRoomId()).senderId(account.getEmail()).content("1").build());
+        Message message2 = messageService.createMessage(Message.builder().roomId(room.getRoomId()).senderId(account.getEmail()).content("2").build());
+        Message message3 = messageService.createMessage(Message.builder().roomId(room.getRoomId()).senderId(account.getEmail()).content("3").build());
+        Message message4 = messageService.createMessage(Message.builder().roomId(room.getRoomId()).senderId(account.getEmail()).content("4").build());
+        Message message5 = messageService.createMessage(Message.builder().roomId(room.getRoomId()).senderId(account.getEmail()).content("5").build());
+
+        // When & Then
+        mockMvc.perform(
+                get("/api/v1/rooms/{roomId}/messages", room.getRoomId())
+                        .param("baseMessageId", String.valueOf(message4.getMessageId()))
+                        .param("size", String.valueOf(2))
+                        .param("direction", MessageGetDirection.FORWARD.name())
+                        .header(HttpHeaders.AUTHORIZATION, bearerToken)
+        )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)));
     }
 
     @Test

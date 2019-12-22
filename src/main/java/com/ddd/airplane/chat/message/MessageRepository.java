@@ -1,6 +1,7 @@
 package com.ddd.airplane.chat.message;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -9,11 +10,35 @@ import org.springframework.stereotype.Repository;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.Date;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Repository
 public class MessageRepository {
     private final JdbcTemplate jdbcTemplate;
+
+    List<Message> selectMessagesInRoom(MessageGetCriteria criteria) {
+
+        try {
+            return jdbcTemplate.query(
+                    criteria.getDirection() == MessageGetDirection.BACKWARD
+                            ? MessageSql.SELECT_MESSAGES_IN_ROOM_BACKWARD
+                            : MessageSql.SELECT_MESSAGES_IN_ROOM_FORWARD,
+                    new Object[]{criteria.getRoomId(), criteria.getBaseMessageId(), criteria.getSize()},
+                    (rs, rowNum) -> {
+                        return Message.builder()
+                                .messageId(rs.getLong("message_id"))
+                                .roomId(rs.getLong("room_id"))
+                                .senderId(rs.getString("sender_id"))
+                                .content(rs.getString("content"))
+                                .createAt(rs.getTimestamp("create_at"))
+                                .build();
+                    }
+            );
+        } catch (EmptyResultDataAccessException e) {
+            return List.of();
+        }
+    }
 
     Message save(Message message) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
