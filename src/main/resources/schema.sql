@@ -47,6 +47,15 @@ CREATE TABLE `subject_subscribe`
     PRIMARY KEY (`subject_id`, `account_id`)
 );
 
+DROP TABLE IF EXISTS `subject_like`;
+CREATE TABLE `subject_like`
+(
+    `subject_id` BIGINT NOT NULL,
+    `account_id` VARCHAR(64) NOT NULL,
+    `like_at` DATETIME NOT NULL,
+    PRIMARY KEY (`subject_id`, `account_id`)
+);
+
 DROP TABLE IF EXISTS `subject_schedule`;
 CREATE TABLE `subject_schedule`
 (

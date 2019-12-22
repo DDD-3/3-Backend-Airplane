@@ -1,6 +1,7 @@
 package com.ddd.airplane.subject;
 
 import com.ddd.airplane.account.Account;
+import com.ddd.airplane.subject.like.SubjectLikeRepository;
 import com.ddd.airplane.subject.schedule.SubjectSchedule;
 import com.ddd.airplane.subject.schedule.SubjectScheduleRepository;
 import com.ddd.airplane.subject.subscribe.SubjectSubscribeRepository;
@@ -15,6 +16,7 @@ import java.util.List;
 public class SubjectService {
     private final SubjectRepository subjectRepository;
     private final SubjectSubscribeRepository subjectSubscribeRepository;
+    private final SubjectLikeRepository subjectLikeRepository;
     private final SubjectScheduleRepository subjectScheduleRepository;
 
     public Subject getSubject(Long subjectId) {
@@ -49,7 +51,19 @@ public class SubjectService {
         subjectSubscribeRepository.replace(subjectId, account.getEmail());
     }
 
-    public void unsubscribe(Long subjectId, Account account) {
+    void unsubscribe(Long subjectId, Account account) {
         subjectSubscribeRepository.delete(subjectId, account.getEmail());
+    }
+
+    boolean liked(Long subjectId, Account account) {
+        return subjectLikeRepository.find(subjectId, account.getEmail()) != null;
+    }
+
+    public void like(Long subjectId, Account account) {
+        subjectLikeRepository.replace(subjectId, account.getEmail());
+    }
+
+    void dislike(Long subjectId, Account account) {
+        subjectLikeRepository.delete(subjectId, account.getEmail());
     }
 }

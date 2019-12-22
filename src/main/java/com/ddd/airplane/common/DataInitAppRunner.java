@@ -74,6 +74,9 @@ public class DataInitAppRunner implements ApplicationRunner {
         subjectService.subscribe(room2.getSubject().getSubjectId(), ghi);
         subjectService.subscribe(room3.getSubject().getSubjectId(), ghi);
 
+        // subject like
+        subjectService.like(room1.getSubject().getSubjectId(), abc);
+
         // subject schedule
         subjectService.addSchedule(room1.getSubject().getSubjectId(), LocalDateTime.of(2019, 12, 10, 22, 0), LocalDateTime.of(2019, 12, 10, 23, 0));
         subjectService.addSchedule(room1.getSubject().getSubjectId(), LocalDateTime.of(2019, 12, 11, 22, 0), LocalDateTime.of(2019, 12, 11, 23, 0));

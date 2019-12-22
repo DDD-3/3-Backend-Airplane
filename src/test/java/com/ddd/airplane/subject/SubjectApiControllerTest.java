@@ -16,9 +16,9 @@ import org.springframework.security.oauth2.common.util.Jackson2JsonParser;
 import org.springframework.test.web.servlet.ResultActions;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class SubjectApiControllerTest extends BaseControllerTest {
@@ -71,6 +71,56 @@ public class SubjectApiControllerTest extends BaseControllerTest {
                 .andExpect(status().isNoContent());
 
         Assert.assertFalse(subjectService.subscribed(given.getSubject().getSubjectId(), account));
+    }
+
+    @Test
+    public void likedSubject() throws Exception {
+        // Given
+        Room given = roomService.createRoom("주제", "설명");
+        subjectService.like(given.getSubject().getSubjectId(), account);
+
+        // When & Then
+        mockMvc.perform(
+                get("/api/v1/subjects/{subjectId}/like", given.getSubject().getSubjectId())
+                        .header(HttpHeaders.AUTHORIZATION, bearerToken)
+        )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.value").value(true));
+
+        Assert.assertFalse(subjectService.subscribed(given.getSubject().getSubjectId(), account));
+    }
+
+    @Test
+    public void likeSubject() throws Exception {
+        // Given
+        Room given = roomService.createRoom("주제", "설명");
+
+        // When & Then
+        mockMvc.perform(
+                post("/api/v1/subjects/{subjectId}/like", given.getSubject().getSubjectId())
+                        .header(HttpHeaders.AUTHORIZATION, bearerToken)
+        )
+                .andDo(print())
+                .andExpect(status().isCreated());
+
+        Assert.assertTrue(subjectService.liked(given.getSubject().getSubjectId(), account));
+    }
+
+    @Test
+    public void dislikeSubject() throws Exception {
+        // Given
+        Room given = roomService.createRoom("주제", "설명");
+
+        // When & Then
+        mockMvc.perform(
+                delete("/api/v1/subjects/{subjectId}/like", given.getSubject().getSubjectId())
+                        .header(HttpHeaders.AUTHORIZATION, bearerToken)
+        )
+                .andDo(print())
+                .andExpect(status().isNoContent());
+
+        Assert.assertFalse(subjectService.liked(given.getSubject().getSubjectId(), account));
     }
 
     private String getBearerToken() throws Exception {
