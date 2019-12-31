@@ -54,7 +54,6 @@ function sendMessage(event) {
     if(messageContent && stompClient) {
         var messagePayload = {
             type: 'CHAT',
-            roomId: roomId,
             content: messageInput.value
         };
         stompClient.send(`/app/room/${roomId}/chat`, {}, JSON.stringify(messagePayload));
