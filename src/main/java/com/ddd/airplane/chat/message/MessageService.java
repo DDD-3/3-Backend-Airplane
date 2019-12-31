@@ -1,6 +1,8 @@
 package com.ddd.airplane.chat.message;
 
 import com.ddd.airplane.account.Account;
+import com.ddd.airplane.chat.payload.ChatPayload;
+import com.ddd.airplane.chat.payload.ChatPayloadType;
 import com.ddd.airplane.chat.room.Room;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -24,18 +26,18 @@ public class MessageService {
         return messageRepository.save(message);
     }
 
-    public void sendMessage(MessagePayload messagePayload, Room room, Account account) {
+    public void sendMessage(ChatPayload chatPayload, Room room, Account account) {
         Message message = createMessage(
                 Message.builder()
                         .roomId(room.getRoomId())
                         .senderId(account.getEmail())
-                        .content(messagePayload.getContent())
+                        .content(chatPayload.getContent())
                         .build());
 
         redisTemplate.convertAndSend(
                 roomTopic.getTopic(),
-                MessagePayload.builder()
-                        .type(MessagePayloadType.CHAT)
+                ChatPayload.builder()
+                        .type(ChatPayloadType.CHAT)
                         .messageId(message.getMessageId())
                         .roomId(room.getRoomId())
                         .senderId(account.getEmail())

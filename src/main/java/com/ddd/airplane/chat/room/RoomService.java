@@ -1,8 +1,8 @@
 package com.ddd.airplane.chat.room;
 
 import com.ddd.airplane.account.Account;
-import com.ddd.airplane.chat.message.MessagePayload;
-import com.ddd.airplane.chat.message.MessagePayloadType;
+import com.ddd.airplane.chat.payload.ChatPayload;
+import com.ddd.airplane.chat.payload.ChatPayloadType;
 import com.ddd.airplane.common.PageInfo;
 import com.ddd.airplane.subject.Subject;
 import com.ddd.airplane.subject.SubjectService;
@@ -36,6 +36,9 @@ public class RoomService {
 
     public Room getRoom(Long roomId) {
         Room room = roomRepository.findById(roomId);
+        if (room == null) {
+            throw new RoomNotFoundException(roomId);
+        }
         Subject subject = subjectService.getSubject(room.getSubject().getSubjectId());
         room.setSubject(subject);
 
@@ -61,8 +64,8 @@ public class RoomService {
 
         redisTemplate.convertAndSend(
                 roomTopic.getTopic(),
-                MessagePayload.builder()
-                        .type(MessagePayloadType.JOIN)
+                ChatPayload.builder()
+                        .type(ChatPayloadType.JOIN)
                         .roomId(room.getRoomId())
                         .senderId(account.getEmail())
                         .senderNickName(account.getNickname())
@@ -75,8 +78,8 @@ public class RoomService {
 
         redisTemplate.convertAndSend(
                 roomTopic.getTopic(),
-                MessagePayload.builder()
-                        .type(MessagePayloadType.LEAVE)
+                ChatPayload.builder()
+                        .type(ChatPayloadType.LEAVE)
                         .roomId(room.getRoomId())
                         .senderId(account.getEmail())
                         .senderNickName(account.getNickname())

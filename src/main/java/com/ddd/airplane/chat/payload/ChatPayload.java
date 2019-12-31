@@ -1,11 +1,11 @@
-package com.ddd.airplane.chat.message;
+package com.ddd.airplane.chat.payload;
 
 import lombok.*;
 
 @Getter @Setter
 @Builder @NoArgsConstructor @AllArgsConstructor @ToString
-public class MessagePayload {
-    private MessagePayloadType type;
+public class ChatPayload {
+    private ChatPayloadType type;
     private Long messageId;
     private Long roomId;
     private String senderId;
