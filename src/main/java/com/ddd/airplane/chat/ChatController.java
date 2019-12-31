@@ -1,8 +1,8 @@
 package com.ddd.airplane.chat;
 
 import com.ddd.airplane.account.Account;
-import com.ddd.airplane.chat.message.MessagePayload;
 import com.ddd.airplane.chat.message.MessageService;
+import com.ddd.airplane.chat.payload.ChatPayload;
 import com.ddd.airplane.chat.room.Room;
 import com.ddd.airplane.chat.room.RoomInvalidException;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ public class ChatController {
     @MessageMapping("/room/{roomId}/chat")
     public void chat(
             @DestinationVariable Long roomId,
-            @Payload MessagePayload messagePayload,
+            @Payload ChatPayload chatPayload,
             SimpMessageHeaderAccessor headerAccessor
     ) {
         Map<String, Object> sessionAttributes = headerAccessor.getSessionAttributes();
@@ -35,6 +35,6 @@ public class ChatController {
 
         Account account = (Account) sessionAttributes.get("account");
 
-        messageService.sendMessage(messagePayload, room, account);
+        messageService.sendMessage(chatPayload, room, account);
     }
 }
