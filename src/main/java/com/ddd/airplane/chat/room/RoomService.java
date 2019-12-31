@@ -36,6 +36,9 @@ public class RoomService {
 
     public Room getRoom(Long roomId) {
         Room room = roomRepository.findById(roomId);
+        if (room == null) {
+            throw new RoomNotFoundException(roomId);
+        }
         Subject subject = subjectService.getSubject(room.getSubject().getSubjectId());
         room.setSubject(subject);
 
