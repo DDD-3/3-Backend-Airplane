@@ -9,6 +9,8 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -31,7 +33,7 @@ public class MessageRepository {
                                 .roomId(rs.getLong("room_id"))
                                 .senderId(rs.getString("sender_id"))
                                 .content(rs.getString("content"))
-                                .createAt(rs.getTimestamp("create_at"))
+                                .createAt(rs.getTimestamp("create_at").getTime())
                                 .build();
                     }
             );
@@ -61,7 +63,7 @@ public class MessageRepository {
                 .roomId(message.getRoomId())
                 .senderId(message.getSenderId())
                 .content(message.getContent())
-                .createAt(new Date())
+                .createAt(Instant.now().toEpochMilli())
                 .build();
     }
 }
