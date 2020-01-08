@@ -21,7 +21,7 @@ VALUES
     'password,refresh_token',
     '',
     '',
-    '86400',
+    '1800',
     '604800',
     '{}',
     ''

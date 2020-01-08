@@ -11,5 +11,6 @@ public class Message {
     private Long roomId;
     private String senderId;
     private String content;
+    // TODO : timestamp 로 변경
     private Date createAt;
 }

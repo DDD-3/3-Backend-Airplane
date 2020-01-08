@@ -21,6 +21,9 @@ public class RoomApiController {
     private final RoomService roomService;
     private final MessageService messageService;
 
+    // TODO
+    // 1. 최근 채팅 메세지 30개 같이 가져오기
+    // 2. 내가 좋아요 했는지 안했는지 정보도 가져오도록 수정
     @GetMapping("/v1/rooms/{roomId}")
     @ResponseStatus(HttpStatus.OK)
     public Room getRoom(
@@ -70,6 +73,7 @@ public class RoomApiController {
         return List.of();
     }
 
+    // TODO : 배열 대신 객체로 내려주도록 변경
     @GetMapping("/v1/rooms/{roomId}/messages")
     @ResponseStatus(HttpStatus.OK)
     public List<Message> getMessages(
