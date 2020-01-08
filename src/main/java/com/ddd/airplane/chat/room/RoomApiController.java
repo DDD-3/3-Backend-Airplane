@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
@@ -73,15 +74,15 @@ public class RoomApiController {
         return List.of();
     }
 
-    // TODO : 배열 대신 객체로 내려주도록 변경
     @GetMapping("/v1/rooms/{roomId}/messages")
     @ResponseStatus(HttpStatus.OK)
-    public List<Message> getMessages(
+    public Map<String, Object> getMessages(
             @PathVariable Long roomId,
             MessageGetCriteria criteria,
             @CurrentAccount Account account
     ) {
         criteria.setRoomId(roomId);
-        return messageService.getMessagesInRoom(criteria);
+        List<Message> messagesInRoom = messageService.getMessagesInRoom(criteria);
+        return Map.of("messages", messagesInRoom);
     }
 }

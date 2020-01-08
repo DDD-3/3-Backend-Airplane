@@ -92,7 +92,7 @@ public class RoomApiControllerTest extends BaseControllerTest {
         )
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(2)));
+                .andExpect(jsonPath("$.messages", hasSize(2)));
     }
 
     @Test
@@ -115,7 +115,7 @@ public class RoomApiControllerTest extends BaseControllerTest {
         )
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(1)));
+                .andExpect(jsonPath("$.messages", hasSize(1)));
     }
 
     @Test
