@@ -55,6 +55,13 @@ public class RoomApiControllerTest extends BaseControllerTest {
         LocalDateTime now = LocalDateTime.now();
         subjectService.addSchedule(given.getSubject().getSubjectId(), now.minusHours(2), now.plusHours(2));
         subjectService.addSchedule(given.getSubject().getSubjectId(), now.plusDays(1), now.plusDays(2));
+        subjectService.like(given.getSubject().getSubjectId(), account);
+        messageService.createMessage(
+                Message.builder()
+                        .roomId(given.getRoomId())
+                        .senderId(account.getEmail())
+                        .content("1")
+                        .build());
 
         // When & Then
         mockMvc.perform(
@@ -69,7 +76,9 @@ public class RoomApiControllerTest extends BaseControllerTest {
                 .andExpect(jsonPath("subject.description").value(given.getSubject().getDescription()))
                 .andExpect(jsonPath("subject.scheduleList", hasSize(2)))
                 .andExpect(jsonPath("subject.subscribeCount").value(1))
-                .andExpect(jsonPath("userCount").exists());
+                .andExpect(jsonPath("messages").exists())
+                .andExpect(jsonPath("userCount").exists())
+                .andExpect(jsonPath("liked").value(true));
     }
 
     @Test

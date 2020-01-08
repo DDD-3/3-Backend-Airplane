@@ -1,6 +1,7 @@
 package com.ddd.airplane.chat.room;
 
 import com.ddd.airplane.account.Account;
+import com.ddd.airplane.chat.message.MessageService;
 import com.ddd.airplane.chat.payload.ChatPayload;
 import com.ddd.airplane.chat.payload.ChatPayloadType;
 import com.ddd.airplane.common.PageInfo;
@@ -17,6 +18,7 @@ import java.util.List;
 @Service
 public class RoomService {
     private final RoomRepository roomRepository;
+    private final MessageService messageService;
     private final SubjectService subjectService;
     private final RedisTemplate redisTemplate;
     private final ChannelTopic roomTopic;
@@ -34,13 +36,15 @@ public class RoomService {
         return room;
     }
 
-    public Room getRoom(Long roomId) {
+    public Room getRoom(Long roomId, Account account) {
         Room room = roomRepository.findById(roomId);
         if (room == null) {
             throw new RoomNotFoundException(roomId);
         }
-        Subject subject = subjectService.getSubject(room.getSubject().getSubjectId());
-        room.setSubject(subject);
+
+        room.setSubject(subjectService.getSubject(room.getSubject().getSubjectId()));
+        room.setMessages(messageService.getRecentMessagesInRoom(roomId));
+        room.setLiked(subjectService.liked(room.getSubject().getSubjectId(), account));
 
         return room;
     }

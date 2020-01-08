@@ -18,6 +18,10 @@ public class MessageService {
     private final RedisTemplate redisTemplate;
     private final ChannelTopic roomTopic;
 
+    public List<Message> getRecentMessagesInRoom(Long roomId) {
+        return messageRepository.selectRecentMessagesInRoom(roomId, 30);
+    }
+
     public List<Message> getMessagesInRoom(MessageGetCriteria criteria) {
         return messageRepository.selectMessagesInRoom(criteria);
     }

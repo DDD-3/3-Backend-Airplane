@@ -10,14 +10,29 @@ import org.springframework.stereotype.Repository;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 @RequiredArgsConstructor
 @Repository
 public class MessageRepository {
     private final JdbcTemplate jdbcTemplate;
+
+    List<Message> selectRecentMessagesInRoom(Long roomId, int size) {
+        try {
+            return jdbcTemplate.query(
+                    MessageSql.SELECT_RECENT_MESSAGES_IN_ROOM,
+                    new Object[]{roomId, size},
+                    (rs, rowNum) -> Message.builder()
+                            .messageId(rs.getLong("message_id"))
+                            .roomId(rs.getLong("room_id"))
+                            .senderId(rs.getString("sender_id"))
+                            .content(rs.getString("content"))
+                            .createAt(rs.getTimestamp("create_at").getTime())
+                            .build());
+        } catch (EmptyResultDataAccessException e) {
+            return List.of();
+        }
+    }
 
     List<Message> selectMessagesInRoom(MessageGetCriteria criteria) {
 

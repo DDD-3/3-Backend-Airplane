@@ -22,16 +22,13 @@ public class RoomApiController {
     private final RoomService roomService;
     private final MessageService messageService;
 
-    // TODO
-    // 1. 최근 채팅 메세지 30개 같이 가져오기
-    // 2. 내가 좋아요 했는지 안했는지 정보도 가져오도록 수정
     @GetMapping("/v1/rooms/{roomId}")
     @ResponseStatus(HttpStatus.OK)
     public Room getRoom(
             @PathVariable Long roomId,
             @CurrentAccount Account account
     ) {
-        return roomService.getRoom(roomId);
+        return roomService.getRoom(roomId, account);
     }
 
     @GetMapping("/v1/roomsOfSubscribedSubjects")

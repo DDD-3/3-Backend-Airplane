@@ -47,15 +47,15 @@ public class ChatChannelInterceptor implements ChannelInterceptor {
             // extract room Id
             String simpDestination = (String) accessor.getHeader("simpDestination");
             Long roomId = Long.valueOf(simpDestination.replace("/topic/room/", ""));
+            // get account from session attributes
+            Account account = (Account) sessionAttributes.get("account");
             // validate room
-            Room room = roomService.getRoom(roomId);
+            Room room = roomService.getRoom(roomId, account);
             if (room == null) {
                 throw new RoomNotFoundException(roomId);
             }
             // set room to session attributes
             sessionAttributes.put("room", room);
-            // get account from session attributes
-            Account account = (Account) sessionAttributes.get("account");
             if (account != null) {
                 log.info("JOIN : accountEmail={}, roomId={}", account.getEmail(), room.getRoomId());
                 // join room

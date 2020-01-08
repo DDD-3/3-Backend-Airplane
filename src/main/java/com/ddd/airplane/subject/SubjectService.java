@@ -55,7 +55,7 @@ public class SubjectService {
         subjectSubscribeRepository.delete(subjectId, account.getEmail());
     }
 
-    boolean liked(Long subjectId, Account account) {
+    public boolean liked(Long subjectId, Account account) {
         return subjectLikeRepository.find(subjectId, account.getEmail()) != null;
     }
 
