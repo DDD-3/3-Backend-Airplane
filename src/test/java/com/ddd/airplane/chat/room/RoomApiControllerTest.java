@@ -76,6 +76,7 @@ public class RoomApiControllerTest extends BaseControllerTest {
                 .andExpect(jsonPath("subject.description").value(given.getSubject().getDescription()))
                 .andExpect(jsonPath("subject.scheduleList", hasSize(2)))
                 .andExpect(jsonPath("subject.subscribeCount").value(1))
+                .andExpect(jsonPath("subject.subscribed").value(true))
                 .andExpect(jsonPath("messages").exists())
                 .andExpect(jsonPath("userCount").exists())
                 .andExpect(jsonPath("liked").value(true));
@@ -156,6 +157,7 @@ public class RoomApiControllerTest extends BaseControllerTest {
                 .andExpect(jsonPath("$.items[0].subject.description").exists())
                 .andExpect(jsonPath("$.items[0].subject.scheduleList").exists())
                 .andExpect(jsonPath("$.items[0].subject.subscribeCount").exists())
+                .andExpect(jsonPath("$.items[0].subject.subscribed").exists())
                 .andExpect(jsonPath("$.items[0].userCount").exists())
                 .andExpect(jsonPath("$.pageInfo.pageNum").value(1))
                 .andExpect(jsonPath("$.pageInfo.pageSize").value(2));
@@ -198,6 +200,7 @@ public class RoomApiControllerTest extends BaseControllerTest {
                 .andExpect(jsonPath("$.items[0].subject.description").exists())
                 .andExpect(jsonPath("$.items[0].subject.scheduleList").exists())
                 .andExpect(jsonPath("$.items[0].subject.subscribeCount").exists())
+                .andExpect(jsonPath("$.items[0].subject.subscribed").exists())
                 .andExpect(jsonPath("$.items[0].userCount").exists())
                 .andExpect(jsonPath("$.pageInfo.pageNum").value(1))
                 .andExpect(jsonPath("$.pageInfo.pageSize").value(2));

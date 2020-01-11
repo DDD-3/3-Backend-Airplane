@@ -42,7 +42,7 @@ public class RoomService {
             throw new RoomNotFoundException(roomId);
         }
 
-        room.setSubject(subjectService.getSubject(room.getSubject().getSubjectId()));
+        room.setSubject(subjectService.getSubject(room.getSubject().getSubjectId(), account));
         room.setMessages(messageService.getRecentMessagesInRoom(roomId));
         room.setLiked(subjectService.liked(room.getSubject().getSubjectId(), account));
 
@@ -51,14 +51,14 @@ public class RoomService {
 
     List<Room> getSubscribedRooms(Account account, PageInfo pageInfo) {
         List<Room> rooms = roomRepository.selectSubscribedRooms(account.getEmail(), pageInfo);
-        rooms.forEach(r -> r.setSubject(subjectService.getSubject(r.getSubject().getSubjectId())));
+        rooms.forEach(r -> r.setSubject(subjectService.getSubject(r.getSubject().getSubjectId(), account)));
 
         return rooms;
     }
 
     List<Room> getRecentMessagedRooms(Account account, PageInfo pageInfo) {
         List<Room> rooms = roomRepository.selectRecentMessagedRooms(account.getEmail(), pageInfo);
-        rooms.forEach(r -> r.setSubject(subjectService.getSubject(r.getSubject().getSubjectId())));
+        rooms.forEach(r -> r.setSubject(subjectService.getSubject(r.getSubject().getSubjectId(), account)));
 
         return rooms;
     }

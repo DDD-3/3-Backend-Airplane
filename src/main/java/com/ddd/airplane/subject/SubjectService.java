@@ -19,11 +19,11 @@ public class SubjectService {
     private final SubjectLikeRepository subjectLikeRepository;
     private final SubjectScheduleRepository subjectScheduleRepository;
 
-    public Subject getSubject(Long subjectId) {
+    public Subject getSubject(Long subjectId, Account account) {
         Subject subject = subjectRepository.findById(subjectId);
         subject.setScheduleList(getSchedules(subjectId));
         subject.setSubscribeCount(getSubscribeCount(subjectId));
-
+        subject.setSubscribed(subscribed(subjectId, account));
         return subject;
     }
 

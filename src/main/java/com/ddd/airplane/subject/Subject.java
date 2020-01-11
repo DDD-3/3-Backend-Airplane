@@ -1,6 +1,7 @@
 package com.ddd.airplane.subject;
 
 import com.ddd.airplane.subject.schedule.SubjectSchedule;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
 import java.util.List;
@@ -13,4 +14,6 @@ public class Subject {
     private String description;
     private List<SubjectSchedule> scheduleList;
     private Long subscribeCount;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Boolean subscribed;
 }
