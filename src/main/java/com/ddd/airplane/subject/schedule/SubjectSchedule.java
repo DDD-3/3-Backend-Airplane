@@ -7,6 +7,6 @@ import java.time.LocalDateTime;
 @Getter @Setter
 @Builder @NoArgsConstructor @AllArgsConstructor @ToString
 public class SubjectSchedule {
-    private LocalDateTime startAt;
-    private LocalDateTime endAt;
+    private Long startAt;
+    private Long endAt;
 }

@@ -17,8 +17,8 @@ public class SubjectScheduleRepository {
                 SubjectScheduleSql.FIND_BY_SUBJECT_ID,
                 new Object[]{subjectId},
                 (rs, rowNum) -> SubjectSchedule.builder()
-                        .startAt(rs.getTimestamp("start_at").toLocalDateTime())
-                        .endAt(rs.getTimestamp("end_at").toLocalDateTime())
+                        .startAt(rs.getTimestamp("start_at").getTime())
+                        .endAt(rs.getTimestamp("end_at").getTime())
                         .build());
     }
 
