@@ -10,7 +10,7 @@ import java.awt.print.Pageable;
 @RestController
 @RequestMapping("/api")
 public class SearchApiController {
-    // TODO : 검색
+    // TODO : 1차 - 검색
     @GetMapping("/v1/search")
     @ResponseStatus(HttpStatus.OK)
     public void search(

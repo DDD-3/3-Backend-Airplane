@@ -51,7 +51,7 @@ public class RoomApiController {
         return new PageContent<>(rooms, pageInfo);
     }
 
-    // TODO : 많이 참여한 채팅방
+    // TODO : 1차 - 많이 참여한 채팅방
     @GetMapping("/v1/wellJoinedRooms")
     @ResponseStatus(HttpStatus.OK)
     public List<Room> getWellJoinedRooms(
@@ -60,8 +60,8 @@ public class RoomApiController {
         return List.of();
     }
 
-    // TODO : 방송사별 채팅방 일정
-    // TODO : 카테고리별 채팅방 일정
+    // TODO : 1차 - 방송사별 채팅방 일정
+    // TODO : 1차 - 카테고리별 채팅방 일정
     @GetMapping("/v1/rooms")
     @ResponseStatus(HttpStatus.OK)
     public List<Room> getRooms(
