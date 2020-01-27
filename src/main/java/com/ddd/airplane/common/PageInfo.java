@@ -22,9 +22,4 @@ public class PageInfo {
     public int getOffset() {
         return (pageNum - 1) * pageSize;
     }
-
-    public PageInfo(Integer pageNum, Integer pageSize) {
-        this.pageNum = pageNum;
-        this.pageSize = pageSize;
-    }
 }

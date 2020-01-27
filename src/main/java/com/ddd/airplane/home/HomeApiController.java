@@ -7,7 +7,6 @@ import com.ddd.airplane.chat.message.MessageService;
 import com.ddd.airplane.chat.room.Room;
 import com.ddd.airplane.chat.room.RoomDto;
 import com.ddd.airplane.chat.room.RoomService;
-import com.ddd.airplane.common.ListDto;
 import com.ddd.airplane.common.PageInfo;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
@@ -44,7 +43,7 @@ public class HomeApiController {
                 HomeComponentStyle.RECTANGLE_BANNER,
                 new BannerDto(4L, "빈 배너", null));
 
-        List<Room> recentMessageRooms = roomService.getRecentMessagedRooms(account, new PageInfo(1, 10));
+        List<Room> recentMessageRooms = roomService.getRecentMessagedRooms(account, new PageInfo());
         List<RoomDto> recentMessageRoomsDto = recentMessageRooms.stream()
                 .map(RoomDto::new)
                 .collect(Collectors.toList());

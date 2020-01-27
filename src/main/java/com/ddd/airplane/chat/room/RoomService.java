@@ -56,6 +56,13 @@ public class RoomService {
         return rooms;
     }
 
+    public List<Room> getRoomsContainSubjectName(String subjectName, Account account, PageInfo pageInfo) {
+        List<Room> rooms = roomRepository.findContainSubjectName(subjectName, pageInfo);
+        rooms.forEach(r -> r.setSubject(subjectService.getSubject(r.getSubject().getSubjectId(), account)));
+
+        return rooms;
+    }
+
     public List<Room> getRecentMessagedRooms(Account account, PageInfo pageInfo) {
         List<Room> rooms = roomRepository.selectRecentMessagedRooms(account.getEmail(), pageInfo);
         rooms.forEach(r -> r.setSubject(subjectService.getSubject(r.getSubject().getSubjectId(), account)));

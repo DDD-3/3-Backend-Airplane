@@ -116,6 +116,31 @@ public class RoomRepository {
                 .build();
     }
 
+    List<Room> findContainSubjectName(String subjectName, PageInfo pageInfo) {
+        try {
+            return jdbcTemplate.query(
+                    RoomSql.SELECT_CONTAIN_NAME,
+                    new Object[]{"%" + subjectName + "%", pageInfo.getLimit(), pageInfo.getOffset()},
+                    (rs, rowNum) -> {
+                        Long  roomId = rs.getLong("room_id");
+
+                        return Room.builder()
+                                .roomId(roomId)
+                                .subject(
+                                        Subject.builder()
+                                                .subjectId(rs.getLong("subject_id"))
+                                                .build()
+                                )
+                                .userCount(getUserCount(roomId))
+                                .build();
+                    }
+            );
+        } catch (EmptyResultDataAccessException e) {
+            return List.of();
+        }
+    }
+
+
     private Long getUserCount(Long roomId) {
         String key = MessageFormat.format(USER_COUNT_KEY, roomId);
         String userCount = Optional.ofNullable(userCountValueOperations.get(key)).orElse("0");
