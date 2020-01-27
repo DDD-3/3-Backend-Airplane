@@ -43,16 +43,6 @@ public class RoomApiController {
         return new PageContent<>(rooms, pageInfo);
     }
 
-    @GetMapping("/v1/recentMessagedRooms")
-    @ResponseStatus(HttpStatus.OK)
-    public PageContent<Room> getRecentMessagedRooms(
-            @CurrentAccount Account account,
-            PageInfo pageInfo
-    ) {
-        List<Room> rooms = roomService.getRecentMessagedRooms(account, pageInfo);
-        return new PageContent<>(rooms, pageInfo);
-    }
-
     // TODO : 1차 - 방송사별 채팅방 일정
     // TODO : 1차 - 카테고리별 채팅방 일정
     @GetMapping("/v1/rooms")
