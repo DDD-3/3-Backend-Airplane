@@ -3,6 +3,7 @@ package com.ddd.airplane.chat.room;
 import com.ddd.airplane.account.Account;
 import com.ddd.airplane.account.CurrentAccount;
 import com.ddd.airplane.chat.message.Message;
+import com.ddd.airplane.chat.message.MessageDto;
 import com.ddd.airplane.chat.message.MessageGetCriteria;
 import com.ddd.airplane.chat.message.MessageService;
 import com.ddd.airplane.common.PageContent;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
@@ -79,7 +81,11 @@ public class RoomApiController {
             @CurrentAccount Account account
     ) {
         criteria.setRoomId(roomId);
-        List<Message> messagesInRoom = messageService.getMessagesInRoom(criteria);
-        return Map.of("messages", messagesInRoom);
+        List<Message> messages = messageService.getMessagesInRoom(criteria);
+        List<MessageDto> messageDtoList = messages.stream()
+                .map(MessageDto::new)
+                .collect(Collectors.toList());
+
+        return Map.of("messages", messageDtoList);
     }
 }
