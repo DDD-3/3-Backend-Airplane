@@ -52,11 +52,14 @@ public class HomeApiController {
                 HomeComponentTitle.RECENT_MESSAGE,
                 recentMessageRoomsDto);
 
-        // TODO : 1차
+        List<Room> mostLikedRooms = roomService.getMostLikedRooms(account, new PageInfo());
+        List<RoomDto> mostLikedRoomsDto = mostLikedRooms.stream()
+                .map(RoomDto::new)
+                .collect(Collectors.toList());
         HomeComponentDto<List<RoomDto>> grid = new HomeComponentDto<>(
                 HomeComponentStyle.GRID,
                 HomeComponentTitle.HOT,
-                List.of());
+                mostLikedRoomsDto);
 
         // TODO : 1차
         HomeComponentDto<List<RoomDto>> rank = new HomeComponentDto<>(

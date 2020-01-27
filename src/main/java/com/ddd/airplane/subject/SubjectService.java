@@ -1,6 +1,7 @@
 package com.ddd.airplane.subject;
 
 import com.ddd.airplane.account.Account;
+import com.ddd.airplane.common.PageInfo;
 import com.ddd.airplane.subject.like.SubjectLikeRepository;
 import com.ddd.airplane.subject.schedule.SubjectSchedule;
 import com.ddd.airplane.subject.schedule.SubjectScheduleRepository;
@@ -65,5 +66,9 @@ public class SubjectService {
 
     void dislike(Long subjectId, Account account) {
         subjectLikeRepository.delete(subjectId, account.getEmail());
+    }
+
+    public List<Long> getLikedSubjectIdList(PageInfo pageInfo) {
+        return subjectLikeRepository.findLikedSubjectIdList(pageInfo);
     }
 }

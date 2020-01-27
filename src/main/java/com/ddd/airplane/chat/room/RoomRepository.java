@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -16,6 +18,7 @@ import java.sql.Statement;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Repository
@@ -23,6 +26,7 @@ public class RoomRepository {
     private static final String USER_COUNT_KEY = "ROOM:{0}:USER_COUNT";
 
     private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Resource(name = "redisTemplate")
     private ValueOperations<String, String> userCountValueOperations;
@@ -155,5 +159,32 @@ public class RoomRepository {
     Long decrementUserCount(Long roomId) {
         String key = MessageFormat.format(USER_COUNT_KEY, roomId);
         return userCountValueOperations.decrement(key);
+    }
+
+    List<Room> selectRoomsBySubjectIdList(List<Long> subjectIdList) {
+        MapSqlParameterSource parameters = new MapSqlParameterSource();
+        parameters.addValue("subjectIdList", subjectIdList);
+
+        try {
+            return namedParameterJdbcTemplate.query(
+                    RoomSql.SELECT_ROOMS_BY_SUBJECT_ID_LIST,
+                    parameters,
+                    (rs, rowNum) -> {
+                        Long  roomId = rs.getLong("room_id");
+
+                        return Room.builder()
+                                .roomId(roomId)
+                                .subject(
+                                        Subject.builder()
+                                                .subjectId(rs.getLong("subject_id"))
+                                                .build()
+                                )
+                                .userCount(getUserCount(roomId))
+                                .build();
+                    }
+            );
+        } catch (EmptyResultDataAccessException e) {
+            return List.of();
+        }
     }
 }

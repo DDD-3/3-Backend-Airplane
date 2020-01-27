@@ -70,6 +70,14 @@ public class RoomService {
         return rooms;
     }
 
+    public List<Room> getMostLikedRooms(Account account, PageInfo pageInfo) {
+        List<Long> subjectIdList = subjectService.getLikedSubjectIdList(pageInfo);
+        List<Room> rooms = roomRepository.selectRoomsBySubjectIdList(subjectIdList);
+        rooms.forEach(r -> r.setSubject(subjectService.getSubject(r.getSubject().getSubjectId(), account)));
+
+        return rooms;
+    }
+
     public void joinRoom(Room room, Account account) {
         Long userCount = roomRepository.incrementUserCount(room.getRoomId());
 

@@ -38,5 +38,13 @@ class RoomSql {
             "WHERE s.name LIKE ? " +
             "LIMIT ? OFFSET ?";
 
+    static final String SELECT_ROOMS_BY_SUBJECT_ID_LIST =
+            "SELECT " +
+                "s.subject_id, " +
+                "r.room_id " +
+            "FROM subject s " +
+            "INNER JOIN room r ON s.subject_id = r.subject_id " +
+            "WHERE s.subject_id IN (:subjectIdList)";
+
     static final String SAVE = "INSERT INTO room (subject_id) VALUES (?)";
 }
