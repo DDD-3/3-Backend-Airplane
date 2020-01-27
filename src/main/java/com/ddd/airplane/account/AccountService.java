@@ -15,14 +15,14 @@ public class AccountService implements UserDetailsService {
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
 
-    public Account createAccount(AccountDto accountDto) {
-        String email = accountDto.getEmail();
+    public Account createAccount(AccountCreateRequest accountCreateRequest) {
+        String email = accountCreateRequest.getEmail();
 
         if (accountRepository.findByEmail(email) != null) {
             throw new AccountAlreadyRegisteredException(email);
         }
 
-        Account account = modelMapper.map(accountDto, Account.class);
+        Account account = modelMapper.map(accountCreateRequest, Account.class);
         account.setPassword(passwordEncoder.encode(account.getPassword()));
 
         return accountRepository.save(account);

@@ -33,7 +33,7 @@ public class AccountApiControllerTest extends BaseControllerTest {
 
     @Test
     public void createAccount() throws Exception {
-        AccountDto accountDto = AccountDto.builder()
+        AccountCreateRequest accountCreateRequest = AccountCreateRequest.builder()
                 .email("y2o2u2n@gmail.com")
                 .password("password")
                 .nickname("y2o2u2n")
@@ -42,7 +42,7 @@ public class AccountApiControllerTest extends BaseControllerTest {
         mockMvc.perform(
                 post("/api/v1/accounts")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(accountDto))
+                    .content(objectMapper.writeValueAsString(accountCreateRequest))
         )
                 .andDo(print())
                 .andExpect(status().isCreated())
@@ -57,7 +57,7 @@ public class AccountApiControllerTest extends BaseControllerTest {
         Account registered = generateAccount(409);
 
         // When & Then
-        AccountDto newAccountDto = AccountDto.builder()
+        AccountCreateRequest newAccountCreateRequest = AccountCreateRequest.builder()
                 .email(registered.getEmail())
                 .password("password")
                 .nickname("nickname")
@@ -66,7 +66,7 @@ public class AccountApiControllerTest extends BaseControllerTest {
         mockMvc.perform(
                 post("/api/v1/accounts")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(newAccountDto))
+                        .content(objectMapper.writeValueAsString(newAccountCreateRequest))
         )
                 .andDo(print())
                 .andExpect(status().isConflict());
@@ -116,13 +116,13 @@ public class AccountApiControllerTest extends BaseControllerTest {
         String password = "password";
         String nickname = "sample";
 
-        AccountDto accountDto = AccountDto.builder()
+        AccountCreateRequest accountCreateRequest = AccountCreateRequest.builder()
                 .email(email)
                 .password(password)
                 .nickname(nickname)
                 .build();
 
-        accountService.createAccount(accountDto);
+        accountService.createAccount(accountCreateRequest);
 
         ResultActions perform = mockMvc.perform(
                 post("/oauth/token")
@@ -138,12 +138,12 @@ public class AccountApiControllerTest extends BaseControllerTest {
     }
 
     private Account generateAccount(int index) {
-        AccountDto accountDto = AccountDto.builder()
+        AccountCreateRequest accountCreateRequest = AccountCreateRequest.builder()
                 .email(MessageFormat.format("sample{0}@email.com", index))
                 .password("password")
                 .nickname("nickname")
                 .build();
 
-        return accountService.createAccount(accountDto);
+        return accountService.createAccount(accountCreateRequest);
     }
 }

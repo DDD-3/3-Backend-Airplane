@@ -28,13 +28,13 @@ public class AccountServiceTest extends BaseServiceTest {
         String password = "password";
         String nickname = "semistone222";
 
-        AccountDto accountDto = AccountDto.builder()
+        AccountCreateRequest accountCreateRequest = AccountCreateRequest.builder()
                 .email(email)
                 .password(password)
                 .nickname(nickname)
                 .build();
 
-        accountService.createAccount(accountDto);
+        accountService.createAccount(accountCreateRequest);
 
         // When
         UserDetails userDetails = accountService.loadUserByUsername(email);

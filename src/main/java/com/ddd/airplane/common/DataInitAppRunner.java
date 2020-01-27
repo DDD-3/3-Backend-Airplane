@@ -1,7 +1,7 @@
 package com.ddd.airplane.common;
 
 import com.ddd.airplane.account.Account;
-import com.ddd.airplane.account.AccountDto;
+import com.ddd.airplane.account.AccountCreateRequest;
 import com.ddd.airplane.account.AccountService;
 import com.ddd.airplane.chat.message.Message;
 import com.ddd.airplane.chat.message.MessageService;
@@ -29,7 +29,7 @@ public class DataInitAppRunner implements ApplicationRunner {
     public void run(ApplicationArguments args) {
         // account
         Account abc = accountService.createAccount(
-                AccountDto.builder()
+                AccountCreateRequest.builder()
                         .email("abc@gmail.com")
                         .password("password")
                         .nickname("abc")
@@ -37,7 +37,7 @@ public class DataInitAppRunner implements ApplicationRunner {
         );
 
         Account def = accountService.createAccount(
-                AccountDto.builder()
+                AccountCreateRequest.builder()
                         .email("def@gmail.com")
                         .password("password")
                         .nickname("def")
@@ -45,7 +45,7 @@ public class DataInitAppRunner implements ApplicationRunner {
         );
 
         Account ghi = accountService.createAccount(
-                AccountDto.builder()
+                AccountCreateRequest.builder()
                         .email("ghi@gmail.com")
                         .password("password")
                         .nickname("ghi")

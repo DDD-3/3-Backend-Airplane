@@ -1,7 +1,7 @@
 package com.ddd.airplane.chat.room;
 
 import com.ddd.airplane.account.Account;
-import com.ddd.airplane.account.AccountDto;
+import com.ddd.airplane.account.AccountCreateRequest;
 import com.ddd.airplane.account.AccountService;
 import com.ddd.airplane.chat.message.Message;
 import com.ddd.airplane.chat.message.MessageGetDirection;
@@ -71,15 +71,15 @@ public class RoomApiControllerTest extends BaseControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("roomId").value(given.getRoomId()))
-                .andExpect(jsonPath("subject.subjectId").value(given.getSubject().getSubjectId()))
-                .andExpect(jsonPath("subject.name").value(given.getSubject().getName()))
-                .andExpect(jsonPath("subject.description").value(given.getSubject().getDescription()))
-                .andExpect(jsonPath("subject.scheduleList", hasSize(2)))
-                .andExpect(jsonPath("subject.subscribeCount").value(1))
-                .andExpect(jsonPath("subject.subscribed").value(true))
-                .andExpect(jsonPath("messages").exists())
-                .andExpect(jsonPath("userCount").exists())
-                .andExpect(jsonPath("liked").value(true));
+                .andExpect(jsonPath("subjectId").value(given.getSubject().getSubjectId()))
+                .andExpect(jsonPath("subjectName").value(given.getSubject().getName()))
+                .andExpect(jsonPath("subjectDescription").value(given.getSubject().getDescription()))
+                .andExpect(jsonPath("upcomingSubjectSchedule").exists())
+                .andExpect(jsonPath("subjectSubscribeCount").value(1))
+                .andExpect(jsonPath("subjectSubscribed").value(true))
+                .andExpect(jsonPath("recentMessages").exists())
+                .andExpect(jsonPath("roomUserCount").exists())
+                .andExpect(jsonPath("roomLiked").value(true));
     }
 
     @Test
@@ -152,56 +152,11 @@ public class RoomApiControllerTest extends BaseControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.items").value(hasSize(2)))
                 .andExpect(jsonPath("$.items[0].roomId").exists())
-                .andExpect(jsonPath("$.items[0].subject.subjectId").exists())
-                .andExpect(jsonPath("$.items[0].subject.name").exists())
-                .andExpect(jsonPath("$.items[0].subject.description").exists())
-                .andExpect(jsonPath("$.items[0].subject.scheduleList").exists())
-                .andExpect(jsonPath("$.items[0].subject.subscribeCount").exists())
-                .andExpect(jsonPath("$.items[0].subject.subscribed").exists())
-                .andExpect(jsonPath("$.items[0].userCount").exists())
-                .andExpect(jsonPath("$.pageInfo.pageNum").value(1))
-                .andExpect(jsonPath("$.pageInfo.pageSize").value(2));
-    }
-
-
-    @Test
-    public void getRecentMessagedRooms() throws Exception {
-        // Given
-        Room given = generateRoom(4);
-        Room given2 = generateRoom(5);
-        Room given3 = generateRoom(6);
-
-        subjectService.subscribe(given.getSubject().getSubjectId(), account);
-        subjectService.subscribe(given2.getSubject().getSubjectId(), account);
-        subjectService.subscribe(given3.getSubject().getSubjectId(), account);
-
-        LocalDateTime now = LocalDateTime.now();
-        subjectService.addSchedule(given.getSubject().getSubjectId(), now.minusHours(2), now.plusHours(2));
-        subjectService.addSchedule(given.getSubject().getSubjectId(), now.plusDays(1), now.plusDays(2));
-
-        messageService.createMessage(Message.builder().roomId(given.getRoomId()).senderId(account.getEmail()).content("1-1").build());
-        messageService.createMessage(Message.builder().roomId(given.getRoomId()).senderId(account.getEmail()).content("1-2").build());
-        messageService.createMessage(Message.builder().roomId(given.getRoomId()).senderId(account.getEmail()).content("1-3").build());
-        messageService.createMessage(Message.builder().roomId(given3.getRoomId()).senderId(account.getEmail()).content("3-1").build());
-
-        // When & Then
-        mockMvc.perform(
-                get("/api//v1/recentMessagedRooms")
-                        .param("pageNum", String.valueOf(1))
-                        .param("pageSize", String.valueOf(2))
-                        .header(HttpHeaders.AUTHORIZATION, bearerToken)
-        )
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.items").value(hasSize(2)))
-                .andExpect(jsonPath("$.items[0].roomId").exists())
-                .andExpect(jsonPath("$.items[0].subject.subjectId").exists())
-                .andExpect(jsonPath("$.items[0].subject.name").exists())
-                .andExpect(jsonPath("$.items[0].subject.description").exists())
-                .andExpect(jsonPath("$.items[0].subject.scheduleList").exists())
-                .andExpect(jsonPath("$.items[0].subject.subscribeCount").exists())
-                .andExpect(jsonPath("$.items[0].subject.subscribed").exists())
-                .andExpect(jsonPath("$.items[0].userCount").exists())
+                .andExpect(jsonPath("$.items[0].subjectId").exists())
+                .andExpect(jsonPath("$.items[0].subjectName").exists())
+                .andExpect(jsonPath("$.items[0].subjectDescription").exists())
+                .andExpect(jsonPath("$.items[0].subjectSubscribeCount").exists())
+                .andExpect(jsonPath("$.items[0].roomUserCount").exists())
                 .andExpect(jsonPath("$.pageInfo.pageNum").value(1))
                 .andExpect(jsonPath("$.pageInfo.pageSize").value(2));
     }
@@ -215,13 +170,13 @@ public class RoomApiControllerTest extends BaseControllerTest {
         String password = "password";
         String nickname = "sample";
 
-        AccountDto accountDto = AccountDto.builder()
+        AccountCreateRequest accountCreateRequest = AccountCreateRequest.builder()
                 .email(email)
                 .password(password)
                 .nickname(nickname)
                 .build();
 
-        account = accountService.createAccount(accountDto);
+        account = accountService.createAccount(accountCreateRequest);
 
         ResultActions perform = mockMvc.perform(
                 post("/oauth/token")

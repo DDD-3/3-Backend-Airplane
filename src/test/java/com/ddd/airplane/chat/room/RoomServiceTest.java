@@ -1,7 +1,7 @@
 package com.ddd.airplane.chat.room;
 
 import com.ddd.airplane.account.Account;
-import com.ddd.airplane.account.AccountDto;
+import com.ddd.airplane.account.AccountCreateRequest;
 import com.ddd.airplane.account.AccountService;
 import com.ddd.airplane.common.BaseServiceTest;
 import org.junit.Assert;
@@ -39,12 +39,12 @@ public class RoomServiceTest extends BaseServiceTest {
         String password = "password";
         String nickname = "sample";
 
-        AccountDto accountDto = AccountDto.builder()
+        AccountCreateRequest accountCreateRequest = AccountCreateRequest.builder()
                 .email(email)
                 .password(password)
                 .nickname(nickname)
                 .build();
 
-        return accountService.createAccount(accountDto);
+        return accountService.createAccount(accountCreateRequest);
     }
 }

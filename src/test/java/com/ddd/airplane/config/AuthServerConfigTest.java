@@ -1,6 +1,6 @@
 package com.ddd.airplane.config;
 
-import com.ddd.airplane.account.AccountDto;
+import com.ddd.airplane.account.AccountCreateRequest;
 import com.ddd.airplane.account.AccountService;
 import com.ddd.airplane.common.AppProperties;
 import com.ddd.airplane.common.BaseControllerTest;
@@ -34,13 +34,13 @@ public class AuthServerConfigTest extends BaseControllerTest {
         String password = "password";
         String nickname = "y2o2u2n";
 
-        AccountDto accountDto = AccountDto.builder()
+        AccountCreateRequest accountCreateRequest = AccountCreateRequest.builder()
                 .email(email)
                 .password(password)
                 .nickname(nickname)
                 .build();
 
-        accountService.createAccount(accountDto);
+        accountService.createAccount(accountCreateRequest);
 
         mockMvc.perform(
                 post("/oauth/token")
@@ -75,13 +75,13 @@ public class AuthServerConfigTest extends BaseControllerTest {
         String password = "password";
         String nickname = "sample";
 
-        AccountDto accountDto = AccountDto.builder()
+        AccountCreateRequest accountCreateRequest = AccountCreateRequest.builder()
                 .email(email)
                 .password(password)
                 .nickname(nickname)
                 .build();
 
-        accountService.createAccount(accountDto);
+        accountService.createAccount(accountCreateRequest);
 
         ResultActions perform = mockMvc.perform(
                 post("/oauth/token")
