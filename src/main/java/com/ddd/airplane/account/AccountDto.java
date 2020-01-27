@@ -1,15 +1,14 @@
 package com.ddd.airplane.account;
 
-import lombok.Builder;
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
-
-@Data @Builder
+@Data
 public class AccountDto {
-    @NotBlank
     private String email;
-    @NotBlank
-    private String password;
     private String nickname;
+
+    public AccountDto(Account account) {
+        this.email = account.getEmail();
+        this.nickname = account.getNickname();
+    }
 }

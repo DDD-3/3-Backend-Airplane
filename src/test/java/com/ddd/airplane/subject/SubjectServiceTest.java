@@ -1,7 +1,7 @@
 package com.ddd.airplane.subject;
 
 import com.ddd.airplane.account.Account;
-import com.ddd.airplane.account.AccountDto;
+import com.ddd.airplane.account.AccountCreateRequest;
 import com.ddd.airplane.account.AccountService;
 import com.ddd.airplane.chat.room.Room;
 import com.ddd.airplane.chat.room.RoomService;
@@ -36,14 +36,14 @@ public class SubjectServiceTest extends BaseServiceTest {
         room = roomService.createRoom("주제", "설명");
 
         account1 = accountService.createAccount(
-                AccountDto.builder()
+                AccountCreateRequest.builder()
                         .email("sample@gmail.com")
                         .password("password")
                         .nickname("sample")
                         .build());
 
         account2 = accountService.createAccount(
-                AccountDto.builder()
+                AccountCreateRequest.builder()
                         .email("sample2@gmail.com")
                         .password("password")
                         .nickname("sample")

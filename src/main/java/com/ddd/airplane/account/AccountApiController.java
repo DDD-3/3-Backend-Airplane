@@ -14,16 +14,18 @@ public class AccountApiController {
 
     @PostMapping("/v1/accounts")
     @ResponseStatus(HttpStatus.CREATED)
-    public Account createAccount(@RequestBody @Valid AccountDto accountDto) {
-        return accountService.createAccount(accountDto);
+    public AccountDto createAccount(@RequestBody @Valid AccountCreateRequest accountCreateRequest) {
+        Account account = accountService.createAccount(accountCreateRequest);
+        return new AccountDto(account);
     }
 
     @GetMapping("/v1/accounts/{email}")
     @ResponseStatus(HttpStatus.OK)
-    public Account getAccount(
+    public AccountDto getAccount(
             @PathVariable String email,
-            @CurrentAccount Account account
+            @CurrentAccount Account self
     ) {
-        return accountService.getAccount(email);
+        Account account = accountService.getAccount(email);
+        return new AccountDto(account);
     }
 }

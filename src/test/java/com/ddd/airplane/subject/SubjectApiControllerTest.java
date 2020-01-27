@@ -1,7 +1,7 @@
 package com.ddd.airplane.subject;
 
 import com.ddd.airplane.account.Account;
-import com.ddd.airplane.account.AccountDto;
+import com.ddd.airplane.account.AccountCreateRequest;
 import com.ddd.airplane.account.AccountService;
 import com.ddd.airplane.chat.room.Room;
 import com.ddd.airplane.chat.room.RoomService;
@@ -132,13 +132,13 @@ public class SubjectApiControllerTest extends BaseControllerTest {
         String password = "password";
         String nickname = "sample";
 
-        AccountDto accountDto = AccountDto.builder()
+        AccountCreateRequest accountCreateRequest = AccountCreateRequest.builder()
                 .email(email)
                 .password(password)
                 .nickname(nickname)
                 .build();
 
-        account = accountService.createAccount(accountDto);
+        account = accountService.createAccount(accountCreateRequest);
 
         ResultActions perform = mockMvc.perform(
                 post("/oauth/token")
