@@ -9,6 +9,7 @@ public class RoomSubscribeDto {
     private Long subjectId;
     private String subjectName;
     private String subjectDescription;
+    private String subjectThumbnailUrl;
     private Long subjectSubscribeCount;
     private Long roomUserCount;
 
@@ -18,6 +19,7 @@ public class RoomSubscribeDto {
         this.subjectId = subject.getSubjectId();
         this.subjectName = subject.getName();
         this.subjectDescription = subject.getDescription();
+        this.subjectThumbnailUrl = null;
         this.subjectSubscribeCount = subject.getSubscribeCount();
         this.roomUserCount = room.getUserCount();
     }

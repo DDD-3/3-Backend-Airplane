@@ -6,11 +6,11 @@ import lombok.Data;
 public class BannerDto {
     private Long id;
     private String title;
-    private String imageUrl;
+    private String thumbnailUrl;
 
-    public BannerDto(Long id, String title, String imageUrl) {
+    public BannerDto(Long id, String title, String thumbnailUrl) {
         this.id = id;
         this.title = title;
-        this.imageUrl = imageUrl;
+        this.thumbnailUrl = thumbnailUrl;
     }
 }

@@ -45,39 +45,27 @@ public class HomeApiController {
                 new BannerDto(4L, "빈 배너", null));
 
         List<Room> recentMessageRooms = roomService.getRecentMessagedRooms(account, new PageInfo(1, 10));
-        ListDto<RoomDto> recentMessageRoomsDto = convert(recentMessageRooms);
-        HomeComponentDto<ListDto<RoomDto>> horizontal = new HomeComponentDto<>(
+        List<RoomDto> recentMessageRoomsDto = recentMessageRooms.stream()
+                .map(RoomDto::new)
+                .collect(Collectors.toList());
+        HomeComponentDto<List<RoomDto>> horizontal = new HomeComponentDto<>(
                 HomeComponentStyle.HORIZONTAL,
                 HomeComponentTitle.RECENT_MESSAGE,
                 recentMessageRoomsDto);
 
         // TODO : 1차
-        HomeComponentDto<ListDto<RoomDto>> grid = new HomeComponentDto<>(
+        HomeComponentDto<List<RoomDto>> grid = new HomeComponentDto<>(
                 HomeComponentStyle.GRID,
                 HomeComponentTitle.HOT,
-                new ListDto<>(null));
+                List.of());
 
         // TODO : 1차
-        HomeComponentDto<ListDto<RoomDto>> rank = new HomeComponentDto<>(
+        HomeComponentDto<List<RoomDto>> rank = new HomeComponentDto<>(
                 HomeComponentStyle.RANK,
                 HomeComponentTitle.MOST_JOIN,
-                new ListDto<>(null));
+                List.of());
 
         return new HomeDto(List.of(topBanner, rectangleBanner, horizontal, grid, rank));
-    }
-
-    private ListDto<RoomDto> convert(List<Room> rooms) {
-        List<RoomDto> roomDtoList = rooms.stream()
-                .map(r -> new RoomDto(
-                        r.getRoomId(),
-                        r.getSubject().getName(),
-                        r.getSubject().getDescription(),
-                        null,
-                        r.getSubject().getSubscribeCount(),
-                        r.getUserCount()
-                )).collect(Collectors.toList());
-
-        return new ListDto<>(roomDtoList);
     }
 
     @Data
