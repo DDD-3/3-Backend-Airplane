@@ -14,6 +14,5 @@ public class Subject {
     private String description;
     private List<SubjectSchedule> scheduleList;
     private Long subscribeCount;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Boolean subscribed;
 }

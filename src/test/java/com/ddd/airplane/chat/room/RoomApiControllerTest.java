@@ -71,15 +71,15 @@ public class RoomApiControllerTest extends BaseControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("roomId").value(given.getRoomId()))
-                .andExpect(jsonPath("subject.subjectId").value(given.getSubject().getSubjectId()))
-                .andExpect(jsonPath("subject.name").value(given.getSubject().getName()))
-                .andExpect(jsonPath("subject.description").value(given.getSubject().getDescription()))
-                .andExpect(jsonPath("subject.scheduleList", hasSize(2)))
-                .andExpect(jsonPath("subject.subscribeCount").value(1))
-                .andExpect(jsonPath("subject.subscribed").value(true))
-                .andExpect(jsonPath("messages").exists())
-                .andExpect(jsonPath("userCount").exists())
-                .andExpect(jsonPath("liked").value(true));
+                .andExpect(jsonPath("subjectId").value(given.getSubject().getSubjectId()))
+                .andExpect(jsonPath("subjectName").value(given.getSubject().getName()))
+                .andExpect(jsonPath("subjectDescription").value(given.getSubject().getDescription()))
+                .andExpect(jsonPath("upcomingSubjectSchedule").exists())
+                .andExpect(jsonPath("subjectSubscribeCount").value(1))
+                .andExpect(jsonPath("subjectSubscribed").value(true))
+                .andExpect(jsonPath("recentMessages").exists())
+                .andExpect(jsonPath("roomUserCount").exists())
+                .andExpect(jsonPath("roomLiked").value(true));
     }
 
     @Test
@@ -152,13 +152,11 @@ public class RoomApiControllerTest extends BaseControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.items").value(hasSize(2)))
                 .andExpect(jsonPath("$.items[0].roomId").exists())
-                .andExpect(jsonPath("$.items[0].subject.subjectId").exists())
-                .andExpect(jsonPath("$.items[0].subject.name").exists())
-                .andExpect(jsonPath("$.items[0].subject.description").exists())
-                .andExpect(jsonPath("$.items[0].subject.scheduleList").exists())
-                .andExpect(jsonPath("$.items[0].subject.subscribeCount").exists())
-                .andExpect(jsonPath("$.items[0].subject.subscribed").exists())
-                .andExpect(jsonPath("$.items[0].userCount").exists())
+                .andExpect(jsonPath("$.items[0].subjectId").exists())
+                .andExpect(jsonPath("$.items[0].subjectName").exists())
+                .andExpect(jsonPath("$.items[0].subjectDescription").exists())
+                .andExpect(jsonPath("$.items[0].subjectSubscribeCount").exists())
+                .andExpect(jsonPath("$.items[0].roomUserCount").exists())
                 .andExpect(jsonPath("$.pageInfo.pageNum").value(1))
                 .andExpect(jsonPath("$.pageInfo.pageSize").value(2));
     }
