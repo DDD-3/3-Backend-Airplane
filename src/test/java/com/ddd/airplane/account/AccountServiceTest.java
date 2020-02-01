@@ -26,12 +26,10 @@ public class AccountServiceTest extends BaseServiceTest {
         // Given
         String email = "y2o2u2n@gmail.com";
         String password = "password";
-        String nickname = "semistone222";
 
         AccountCreateRequest accountCreateRequest = AccountCreateRequest.builder()
                 .email(email)
                 .password(password)
-                .nickname(nickname)
                 .build();
 
         accountService.createAccount(accountCreateRequest);

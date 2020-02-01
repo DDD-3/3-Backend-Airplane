@@ -11,5 +11,4 @@ public class AccountCreateRequest {
     private String email;
     @NotBlank
     private String password;
-    private String nickname;
 }

@@ -37,12 +37,10 @@ public class RoomServiceTest extends BaseServiceTest {
     private Account createAccount() {
         String email = "sample@gmail.com";
         String password = "password";
-        String nickname = "sample";
 
         AccountCreateRequest accountCreateRequest = AccountCreateRequest.builder()
                 .email(email)
                 .password(password)
-                .nickname(nickname)
                 .build();
 
         return accountService.createAccount(accountCreateRequest);
