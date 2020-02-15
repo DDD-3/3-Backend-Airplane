@@ -18,6 +18,12 @@ public class RoomDto {
         this.subjectName = subject.getName();
         this.subjectDescription = subject.getDescription();
         this.subjectThumbnailUrl = null;
+        if (subject.getSubjectId() == 1L) {
+            this.subjectThumbnailUrl = "https://s3.amazonaws.com/thumbnail.airplane/img_sumbnail_mello.jpg";
+        } else if (subject.getSubjectId() == 2L) {
+            this.subjectThumbnailUrl = "https://s3.amazonaws.com/thumbnail.airplane/img_sumbnail_zoo.jpg";
+        }
+
         this.subjectSubscribeCount = subject.getSubscribeCount();
         this.roomUserCount =room.getUserCount();
     }
