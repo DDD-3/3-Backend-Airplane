@@ -34,9 +34,9 @@ public class HomeApiController {
         HomeComponentDto<List<BannerDto>> topBanner = new HomeComponentDto<>(
                 HomeComponentStyle.TOP_BANNER,
                 List.of(
-                        new BannerDto(1L, "혼자 방송 볼 때\n 심심하다면?\n 사바사!", null),
-                        new BannerDto(2L, "사이더들과\n 오늘 밤\n 달려요!", null),
-                        new BannerDto(3L, "구독 방송\n 핫한 방송\n 한번에!", null)));
+                        new BannerDto(1L, "혼자 방송 볼 때\n심심하다면?\n사바사!", null),
+                        new BannerDto(2L, "사이더들과\n오늘 밤\n달려요!", null),
+                        new BannerDto(3L, "구독 방송\n핫한 방송\n한번에!", null)));
 
         // TODO : 2차
         HomeComponentDto<BannerDto> rectangleBanner = new HomeComponentDto<>(
