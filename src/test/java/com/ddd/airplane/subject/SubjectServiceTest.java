@@ -39,12 +39,14 @@ public class SubjectServiceTest extends BaseServiceTest {
                 AccountCreateRequest.builder()
                         .email("sample@gmail.com")
                         .password("password")
+                        .nickname("sample")
                         .build());
 
         account2 = accountService.createAccount(
                 AccountCreateRequest.builder()
                         .email("sample2@gmail.com")
                         .password("password")
+                        .nickname("sample")
                         .build());
     }
 

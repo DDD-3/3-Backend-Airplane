@@ -36,6 +36,7 @@ public class AccountApiControllerTest extends BaseControllerTest {
         AccountCreateRequest accountCreateRequest = AccountCreateRequest.builder()
                 .email("y2o2u2n@gmail.com")
                 .password("password")
+                .nickname("y2o2u2n")
                 .build();
 
         mockMvc.perform(
@@ -47,7 +48,7 @@ public class AccountApiControllerTest extends BaseControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("email").value("y2o2u2n@gmail.com"))
                 .andExpect(jsonPath("password").doesNotExist())
-                .andExpect(jsonPath("nickname").exists());
+                .andExpect(jsonPath("nickname").value("y2o2u2n"));
     }
 
     @Test
@@ -59,6 +60,7 @@ public class AccountApiControllerTest extends BaseControllerTest {
         AccountCreateRequest newAccountCreateRequest = AccountCreateRequest.builder()
                 .email(registered.getEmail())
                 .password("password")
+                .nickname("nickname")
                 .build();
 
         mockMvc.perform(
@@ -112,10 +114,12 @@ public class AccountApiControllerTest extends BaseControllerTest {
     private String getAccessToken() throws Exception {
         String email = "sample@gmail.com";
         String password = "password";
+        String nickname = "sample";
 
         AccountCreateRequest accountCreateRequest = AccountCreateRequest.builder()
                 .email(email)
                 .password(password)
+                .nickname(nickname)
                 .build();
 
         accountService.createAccount(accountCreateRequest);
@@ -137,6 +141,7 @@ public class AccountApiControllerTest extends BaseControllerTest {
         AccountCreateRequest accountCreateRequest = AccountCreateRequest.builder()
                 .email(MessageFormat.format("sample{0}@email.com", index))
                 .password("password")
+                .nickname("nickname")
                 .build();
 
         return accountService.createAccount(accountCreateRequest);

@@ -168,10 +168,12 @@ public class RoomApiControllerTest extends BaseControllerTest {
     private String getAccessToken() throws Exception {
         String email = "sample@gmail.com";
         String password = "password";
+        String nickname = "sample";
 
         AccountCreateRequest accountCreateRequest = AccountCreateRequest.builder()
                 .email(email)
                 .password(password)
+                .nickname(nickname)
                 .build();
 
         account = accountService.createAccount(accountCreateRequest);

@@ -32,6 +32,7 @@ public class DataInitAppRunner implements ApplicationRunner {
                 AccountCreateRequest.builder()
                         .email("abc@gmail.com")
                         .password("password")
+                        .nickname("abc")
                         .build()
         );
 
@@ -39,6 +40,7 @@ public class DataInitAppRunner implements ApplicationRunner {
                 AccountCreateRequest.builder()
                         .email("def@gmail.com")
                         .password("password")
+                        .nickname("def")
                         .build()
         );
 
@@ -46,6 +48,7 @@ public class DataInitAppRunner implements ApplicationRunner {
                 AccountCreateRequest.builder()
                         .email("ghi@gmail.com")
                         .password("password")
+                        .nickname("ghi")
                         .build()
         );
 

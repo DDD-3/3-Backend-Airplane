@@ -32,10 +32,12 @@ public class AuthServerConfigTest extends BaseControllerTest {
         // Given
         String email = "y2o2u2n@gmail.com";
         String password = "password";
+        String nickname = "y2o2u2n";
 
         AccountCreateRequest accountCreateRequest = AccountCreateRequest.builder()
                 .email(email)
                 .password(password)
+                .nickname(nickname)
                 .build();
 
         accountService.createAccount(accountCreateRequest);
@@ -71,10 +73,12 @@ public class AuthServerConfigTest extends BaseControllerTest {
     private String getRefreshToken() throws Exception {
         String email = "sample@gmail.com";
         String password = "password";
+        String nickname = "sample";
 
         AccountCreateRequest accountCreateRequest = AccountCreateRequest.builder()
                 .email(email)
                 .password(password)
+                .nickname(nickname)
                 .build();
 
         accountService.createAccount(accountCreateRequest);
